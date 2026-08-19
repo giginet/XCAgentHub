@@ -16,7 +16,7 @@
         "--rm",
         "-i",
         "-v",
-        "/Users/giginet/work/Swift/XCMCPHub:/workspace",
+        "${CLAUDE_PROJECT_DIR:-.}:/workspace",
         "ghcr.io/giginet/xcodeproj-mcp-server:latest",
         "/workspace"
       ],
