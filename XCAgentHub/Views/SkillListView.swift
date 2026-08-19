@@ -49,7 +49,7 @@ struct SkillListView: View {
         .navigationSubtitle(agent.skillsDirectoryRelativePath)
         .toolbar {
             ToolbarItem {
-                Button("Show in Finder", systemImage: "folder") {
+                Button("Show in Finder", systemImage: "finder") {
                     if let url = model.skillsDirectoryURL(for: agent) {
                         FinderReveal.show(url)
                     }

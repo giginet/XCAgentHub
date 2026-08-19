@@ -49,7 +49,7 @@ struct ServerListView: View {
         .navigationSubtitle(agent.configFileRelativePath)
         .toolbar {
             ToolbarItem {
-                Button("Show in Finder", systemImage: "folder") {
+                Button("Show in Finder", systemImage: "finder") {
                     if let url = model.configFileURL(for: agent) {
                         FinderReveal.show(url)
                     }
