@@ -1,25 +1,42 @@
 import SwiftUI
-import Playgrounds
-
-@main struct MyApp: App {
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
-        }
-    }
-}
 
 struct ContentView: View {
+    @Environment(MCPHubViewModel.self) private var model
+
     var body: some View {
-        Text("Hello, world!")
-            .padding()
+        @Bindable var model = model
+        Group {
+            if model.hasFolderAccess {
+                NavigationSplitView {
+                    SidebarView()
+                } detail: {
+                    if let agent = model.selectedAgent {
+                        ServerListView(agent: agent)
+                    } else {
+                        ContentUnavailableView(
+                            "Select an Agent",
+                            systemImage: "sidebar.left",
+                            description: Text("Choose a coding agent in the sidebar to manage its MCP servers.")
+                        )
+                    }
+                }
+            } else {
+                OnboardingView()
+            }
+        }
+        .task {
+            model.reloadAll()
+        }
+        .onChange(of: model.hasFolderAccess) { _, hasAccess in
+            if hasAccess {
+                model.reloadAll()
+            }
+        }
+        .frame(minWidth: 640, minHeight: 400)
     }
 }
 
 #Preview {
     ContentView()
-}
-
-#Playground {
-    _ = 1 + 2
+        .environment(MCPHubViewModel.preview)
 }

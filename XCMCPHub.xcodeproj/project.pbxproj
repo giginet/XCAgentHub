@@ -6,8 +6,24 @@
 	objectVersion = 90;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		07089A3130343D82008911A0 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		07089A5E303440B5008911A0 /* TOML in Frameworks */ = {isa = PBXBuildFile; productRef = DDBB262FA1E4038B8D3CB375 /* TOML */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		D101C6C573901113D906D159 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 000000000000000000000000 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 000000000000000100000000;
+			remoteInfo = XCMCPHub;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		000000000000000000000120 /* XCMCPHub.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XCMCPHub.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		07089A2A30343D72008911A0 /* XCMCPHubTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = XCMCPHubTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -16,10 +32,22 @@
 			path = XCMCPHub;
 			sourceTree = "<group>";
 		};
+		07089A2B30343D72008911A0 /* XCMCPHubTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = XCMCPHubTests;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		000000000000000130000000 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+				07089A5E303440B5008911A0 /* TOML in Frameworks */,
+				07089A3130343D82008911A0 /* (null) in Frameworks */,
+			);
+		};
+		07089A2730343D72008911A0 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
 			);
@@ -31,6 +59,7 @@
 			isa = PBXGroup;
 			children = (
 				000000000000000000000010 /* XCMCPHub */,
+				07089A2B30343D72008911A0 /* XCMCPHubTests */,
 				000000000000000000000020 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -39,6 +68,7 @@
 			isa = PBXGroup;
 			children = (
 				000000000000000000000120 /* XCMCPHub.app */,
+				07089A2A30343D72008911A0 /* XCMCPHubTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -60,9 +90,33 @@
 				000000000000000000000010 /* XCMCPHub */,
 			);
 			name = XCMCPHub;
+			packageProductDependencies = (
+				DDBB262FA1E4038B8D3CB375 /* TOML */,
+			);
 			productName = MyApp;
 			productReference = 000000000000000000000120 /* XCMCPHub.app */;
 			productType = "com.apple.product-type.application";
+		};
+		07089A2930343D72008911A0 /* XCMCPHubTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 07089A2E30343D72008911A0 /* Build configuration list for PBXNativeTarget "XCMCPHubTests" */;
+			buildPhases = (
+				07089A2630343D72008911A0 /* Sources */,
+				07089A2730343D72008911A0 /* Frameworks */,
+				07089A2830343D72008911A0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4F7621AA034850989049EEF9 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				07089A2B30343D72008911A0 /* XCMCPHubTests */,
+			);
+			name = XCMCPHubTests;
+			productName = XCMCPHubTests;
+			productReference = 07089A2A30343D72008911A0 /* XCMCPHubTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -71,11 +125,14 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 2630;
+				LastSwiftUpdateCheck = 2700;
 				LastUpgradeCheck = 2700;
 				TargetAttributes = {
 					000000000000000100000000 = {
 						CreatedOnToolsVersion = 26.3;
+					};
+					07089A2930343D72008911A0 = {
+						CreatedOnToolsVersion = 27.0;
 					};
 				};
 			};
@@ -88,18 +145,27 @@
 			);
 			mainGroup = 000000000000000000000001;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				3709CF4026CADD2BCE7F03C2 /* XCRemoteSwiftPackageReference "swift-toml" */,
+			);
 			preferredProjectObjectVersion = 90;
 			productRefGroup = 000000000000000000000020 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				000000000000000100000000 /* XCMCPHub */,
+				07089A2930343D72008911A0 /* XCMCPHubTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		000000000000000140000000 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
+		07089A2830343D72008911A0 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			files = (
 			);
@@ -112,7 +178,21 @@
 			files = (
 			);
 		};
+		07089A2630343D72008911A0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		4F7621AA034850989049EEF9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = XCMCPHub;
+			target = 000000000000000100000000 /* XCMCPHub */;
+			targetProxy = D101C6C573901113D906D159 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		000000000000000011000000 /* Debug configuration for PBXProject "XCMCPHub" */ = {
@@ -255,7 +335,7 @@
 				DEVELOPMENT_TEAM = 2AWR7Z4WYE;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_PREVIEWS = YES;
-				ENABLE_USER_SELECTED_FILES = readonly;
+				ENABLE_USER_SELECTED_FILES = readwrite;
 				GENERATE_INFOPLIST_FILE = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -269,13 +349,14 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "devplaceholder.$(PROJECT_UNIQUE_VALUE:identifier).$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTED_PLATFORMS = macosx;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -293,7 +374,7 @@
 				DEVELOPMENT_TEAM = 2AWR7Z4WYE;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_PREVIEWS = YES;
-				ENABLE_USER_SELECTED_FILES = readonly;
+				ENABLE_USER_SELECTED_FILES = readwrite;
 				GENERATE_INFOPLIST_FILE = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -307,19 +388,72 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "devplaceholder.$(PROJECT_UNIQUE_VALUE:identifier).$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTED_PLATFORMS = macosx;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
+			};
+			name = Release;
+		};
+		07089A2F30343D72008911A0 /* Debug configuration for PBXNativeTarget "XCMCPHubTests" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 2AWR7Z4WYE;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yourcompany.XCMCPHubTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = macosx;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/XCMCPHub.app/Contents/MacOS/XCMCPHub";
+				XROS_DEPLOYMENT_TARGET = 27.0;
+			};
+			name = Debug;
+		};
+		07089A3030343D72008911A0 /* Release configuration for PBXNativeTarget "XCMCPHubTests" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 2AWR7Z4WYE;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yourcompany.XCMCPHubTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = macosx;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/XCMCPHub.app/Contents/MacOS/XCMCPHub";
+				XROS_DEPLOYMENT_TARGET = 27.0;
 			};
 			name = Release;
 		};
@@ -342,7 +476,34 @@
 			);
 			defaultConfigurationName = Release;
 		};
+		07089A2E30343D72008911A0 /* Build configuration list for PBXNativeTarget "XCMCPHubTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				07089A2F30343D72008911A0 /* Debug configuration for PBXNativeTarget "XCMCPHubTests" */,
+				07089A3030343D72008911A0 /* Release configuration for PBXNativeTarget "XCMCPHubTests" */,
+			);
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		3709CF4026CADD2BCE7F03C2 /* XCRemoteSwiftPackageReference "swift-toml" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mattt/swift-toml.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		DDBB262FA1E4038B8D3CB375 /* TOML */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3709CF4026CADD2BCE7F03C2 /* XCRemoteSwiftPackageReference "swift-toml" */;
+			productName = TOML;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 000000000000000000000000 /* Project object */;
 }
