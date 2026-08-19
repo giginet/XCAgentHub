@@ -87,10 +87,16 @@ struct SkillStore {
         return makeSkill(directoryURL: directoryURL)
     }
 
-    /// Copies a skill directory (must contain SKILL.md) into `skills/`.
+    /// Copies a skill directory (must contain SKILL.md) into `skills/`,
+    /// materializing symlinks along the way. `copyItem` would copy a link as
+    /// a link, and skills kept in a dotfiles repo commonly symlink their
+    /// SKILL.md: a relative link breaks the moment it is copied elsewhere,
+    /// and an absolute one points outside the sandbox. Either way the copied
+    /// skill would be unreadable and never show up in the list.
     @discardableResult
     func importSkill(from sourceDirectory: URL) throws -> Skill {
-        let sourceSkillFile = sourceDirectory.appending(path: "SKILL.md")
+        let source = sourceDirectory.resolvingSymlinksInPath()
+        let sourceSkillFile = source.appending(path: "SKILL.md")
         guard FileManager.default.fileExists(atPath: sourceSkillFile.path) else {
             throw SkillStoreError.notASkillDirectory(sourceDirectory.lastPathComponent)
         }
@@ -99,8 +105,31 @@ struct SkillStore {
             throw SkillStoreError.skillAlreadyExists(sourceDirectory.lastPathComponent)
         }
         try FileManager.default.createDirectory(at: skillsDirectoryURL, withIntermediateDirectories: true)
-        try FileManager.default.copyItem(at: sourceDirectory, to: destination)
+        try Self.copyResolvingSymlinks(from: source, to: destination)
         return makeSkill(directoryURL: destination)
+    }
+
+    /// Recursive copy that follows symlinks rather than preserving them.
+    /// Entries whose target does not resolve are skipped, since they carry no
+    /// content; `depth` stops a symlink loop from recursing forever.
+    private static func copyResolvingSymlinks(from source: URL, to destination: URL, depth: Int = 0) throws {
+        guard depth < 16 else { return }
+        let manager = FileManager.default
+        let resolved = source.resolvingSymlinksInPath()
+        var isDirectory: ObjCBool = false
+        guard manager.fileExists(atPath: resolved.path, isDirectory: &isDirectory) else { return }
+        guard isDirectory.boolValue else {
+            try manager.copyItem(at: resolved, to: destination)
+            return
+        }
+        try manager.createDirectory(at: destination, withIntermediateDirectories: true)
+        for entry in try manager.contentsOfDirectory(at: resolved, includingPropertiesForKeys: nil) {
+            try copyResolvingSymlinks(
+                from: entry,
+                to: destination.appending(path: entry.lastPathComponent),
+                depth: depth + 1
+            )
+        }
     }
 
     func delete(_ skill: Skill) throws {

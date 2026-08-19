@@ -373,6 +373,71 @@ struct SkillStoreTests {
         }
     }
 
+    @Test func importMaterializesSymlinkedFiles() throws {
+        let directory = try makeTemporaryDirectory()
+        defer { try? FileManager.default.removeItem(at: directory) }
+
+        // A skill laid out the way a dotfiles repo does it: SKILL.md and a
+        // reference file are relative symlinks into a sibling folder.
+        let shared = directory.appending(path: "shared")
+        try FileManager.default.createDirectory(at: shared, withIntermediateDirectories: true)
+        try "---\nname: linked-skill\ndescription: Linked\n---\nBody"
+            .write(to: shared.appending(path: "SKILL.md"), atomically: true, encoding: .utf8)
+        try "reference".write(to: shared.appending(path: "REFERENCE.md"), atomically: true, encoding: .utf8)
+
+        let source = directory.appending(path: "linked-skill")
+        try FileManager.default.createDirectory(
+            at: source.appending(path: "references"),
+            withIntermediateDirectories: true
+        )
+        try FileManager.default.createSymbolicLink(
+            atPath: source.appending(path: "SKILL.md").path,
+            withDestinationPath: "../shared/SKILL.md"
+        )
+        try FileManager.default.createSymbolicLink(
+            atPath: source.appending(path: "references/REFERENCE.md").path,
+            withDestinationPath: "../../shared/REFERENCE.md"
+        )
+
+        let skillsDirectory = directory.appending(path: "skills")
+        let store = SkillStore(skillsDirectoryURL: skillsDirectory, agent: .claudeCode)
+        let imported = try store.importSkill(from: source)
+
+        // The copies are real files, not links that broke on the way over.
+        let copiedSkillFile = imported.skillFileURL
+        let type = try FileManager.default.attributesOfItem(atPath: copiedSkillFile.path)[.type] as? FileAttributeType
+        #expect(type == .typeRegular)
+        #expect(try String(contentsOf: copiedSkillFile, encoding: .utf8).contains("Body"))
+        #expect(try String(
+            contentsOf: imported.directoryURL.appending(path: "references/REFERENCE.md"),
+            encoding: .utf8
+        ) == "reference")
+
+        let listed = try store.list()
+        #expect(listed.map(\.name) == ["linked-skill"])
+        #expect(listed.first?.summary == "Linked")
+    }
+
+    @Test func importRejectsAFolderWhoseSkillFileIsABrokenLink() throws {
+        let directory = try makeTemporaryDirectory()
+        defer { try? FileManager.default.removeItem(at: directory) }
+
+        let source = directory.appending(path: "broken-skill")
+        try FileManager.default.createDirectory(at: source, withIntermediateDirectories: true)
+        try FileManager.default.createSymbolicLink(
+            atPath: source.appending(path: "SKILL.md").path,
+            withDestinationPath: "../nowhere/SKILL.md"
+        )
+
+        let store = SkillStore(
+            skillsDirectoryURL: directory.appending(path: "skills"),
+            agent: .claudeCode
+        )
+        #expect(throws: SkillStoreError.self) {
+            try store.importSkill(from: source)
+        }
+    }
+
     @Test func saveOverwritesAndDeleteRemoves() throws {
         let directory = try makeTemporaryDirectory()
         defer { try? FileManager.default.removeItem(at: directory) }
