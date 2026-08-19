@@ -15,6 +15,11 @@ struct AboutView: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
+                    // Wrap at a readable measure and grow downwards; without
+                    // this the sentence is clipped in any language that needs
+                    // more room than English.
+                    .fixedSize(horizontal: false, vertical: true)
+                    .frame(maxWidth: 280)
             }
 
             Divider()
@@ -31,7 +36,11 @@ struct AboutView: View {
             .buttonStyle(.link)
         }
         .padding(24)
-        .frame(width: 340)
+        // A minimum rather than a fixed width, then sized to fit: the window
+        // stays compact but grows to whatever the translated labels need,
+        // instead of truncating them.
+        .frame(minWidth: 340)
+        .fixedSize()
     }
 
     private var appIcon: some View {
