@@ -40,7 +40,7 @@ struct AboutView: View {
             .frame(width: 96, height: 96)
     }
 
-    private func row(_ label: String, _ value: String, isMonospaced: Bool = false) -> some View {
+    private func row(_ label: LocalizedStringKey, _ value: String, isMonospaced: Bool = false) -> some View {
         GridRow {
             Text(label)
                 .foregroundStyle(.secondary)

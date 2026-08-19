@@ -158,9 +158,9 @@ struct SkillListView: View {
             .buttonStyle(.borderless)
             .labelStyle(.iconOnly)
             .disabled(selectedSkillIDs.isEmpty)
-            .help(selectedSkillIDs.isEmpty ? "Select a skill to delete it" : "Delete the selected skills")
+            .help(selectedSkillIDs.isEmpty ? Text("Select a skill to delete it") : Text("Delete the selected skills"))
             Spacer()
-            Text(skillCount == 1 ? "1 skill" : "\(skillCount) skills")
+            Text("\(skillCount) skills")
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
@@ -168,11 +168,11 @@ struct SkillListView: View {
         .padding(.vertical, 6)
     }
 
-    private var deletionTitle: String {
+    private var deletionTitle: Text {
         if skillsPendingDeletion.count == 1, let skill = skillsPendingDeletion.first {
-            return "Delete \u{201C}\(skill.name)\u{201D}?"
+            return Text("Delete \u{201C}\(skill.name)\u{201D}?")
         }
-        return "Delete \(skillsPendingDeletion.count) skills?"
+        return Text("Delete \(skillsPendingDeletion.count) skills?")
     }
 
     /// Deletes each pending skill, keeping the first failure to show.
@@ -206,8 +206,10 @@ struct SkillListView: View {
         // Skills usually live under dot-directories such as ~/.claude/skills,
         // so start with hidden files visible.
         panel.showsHiddenFiles = true
-        panel.message = "Select a skill folder that contains SKILL.md. The folder will be copied into \(agent.skillsDirectoryRelativePath)."
-        panel.prompt = "Import"
+        panel.message = String(
+            localized: "Select a skill folder that contains SKILL.md. The folder will be copied into \(agent.skillsDirectoryRelativePath)."
+        )
+        panel.prompt = String(localized: "Import")
         guard panel.runModal() == .OK, let url = panel.url else { return }
         do {
             try model.importSkill(from: url, for: agent)

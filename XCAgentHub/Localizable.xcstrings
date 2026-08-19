@@ -1,0 +1,1187 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "": {
+      "shouldTranslate": false
+    },
+    "%@ Skills": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ のスキル"
+          }
+        }
+      }
+    },
+    "%@ has no MCP servers configured yet.": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ には MCP サーバーがまだ設定されていません。"
+          }
+        }
+      }
+    },
+    "%@ has no skills in %@ yet.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$@ has no skills in %2$@ yet."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ の %@ にはまだスキルがありません。"
+          }
+        }
+      }
+    },
+    "%lld servers": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld server"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld servers"
+                }
+              }
+            }
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld 個のサーバー"
+          }
+        }
+      }
+    },
+    "%lld skills": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld skill"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld skills"
+                }
+              }
+            }
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld 個のスキル"
+          }
+        }
+      }
+    },
+    "/usr/bin/example": {
+      "shouldTranslate": false
+    },
+    "A skill named “%@” already exists.": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "スキル「%@」はすでに存在します。"
+          }
+        }
+      }
+    },
+    "About %@": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ について"
+          }
+        }
+      }
+    },
+    "Add": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "追加"
+          }
+        }
+      }
+    },
+    "Add Argument": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "引数を追加"
+          }
+        }
+      }
+    },
+    "Add Field": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "項目を追加"
+          }
+        }
+      }
+    },
+    "Add MCP Server": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MCP サーバーを追加"
+          }
+        }
+      }
+    },
+    "Add Server": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "サーバーを追加"
+          }
+        }
+      }
+    },
+    "Add Skill": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "スキルを追加"
+          }
+        }
+      }
+    },
+    "Add Tool": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ツールを追加"
+          }
+        }
+      }
+    },
+    "Add Variable": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "変数を追加"
+          }
+        }
+      }
+    },
+    "Add a new MCP server": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "新しい MCP サーバーを追加します"
+          }
+        }
+      }
+    },
+    "Add from Folder…": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "フォルダから追加…"
+          }
+        }
+      }
+    },
+    "Additional Frontmatter": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "その他のフロントマター"
+          }
+        }
+      }
+    },
+    "Allowed Tools": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "許可するツール"
+          }
+        }
+      }
+    },
+    "Argument": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "引数"
+          }
+        }
+      }
+    },
+    "Arguments": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "引数"
+          }
+        }
+      }
+    },
+    "Bash": {
+      "shouldTranslate": false
+    },
+    "Blank keys are skipped, as are duplicates of the fields above.": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "空のキーと、上のフィールドと重複するキーは無視されます。"
+          }
+        }
+      }
+    },
+    "Cancel": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "キャンセル"
+          }
+        }
+      }
+    },
+    "Cannot Read Configuration": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "設定ファイルを読み込めません"
+          }
+        }
+      }
+    },
+    "Cannot Read Skills": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "スキルを読み込めません"
+          }
+        }
+      }
+    },
+    "Choose an agent in the sidebar to manage its MCP servers and skills.": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "サイドバーでエージェントを選ぶと、その MCP サーバーとスキルを管理できます。"
+          }
+        }
+      }
+    },
+    "Choose one of the bundled open source projects.": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "同梱しているオープンソースプロジェクトから選んでください。"
+          }
+        }
+      }
+    },
+    "Command": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "コマンド"
+          }
+        }
+      }
+    },
+    "Connected to %@": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ に接続しました"
+          }
+        }
+      }
+    },
+    "Create": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "作成"
+          }
+        }
+      }
+    },
+    "Created as %@/%@/SKILL.md. Agents match the description against the task at hand, so say when the skill applies.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "Created as %1$@/%2$@/SKILL.md. Agents match the description against the task at hand, so say when the skill applies."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@/%@/SKILL.md として作成されます。エージェントは description を作業内容と照合するので、どんなときに使うスキルかを書いてください。"
+          }
+        }
+      }
+    },
+    "Delete": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "削除"
+          }
+        }
+      }
+    },
+    "Delete %lld servers?": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld 個のサーバーを削除しますか？"
+          }
+        }
+      }
+    },
+    "Delete %lld skills?": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld 個のスキルを削除しますか？"
+          }
+        }
+      }
+    },
+    "Delete the selected servers": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "選択したサーバーを削除します"
+          }
+        }
+      }
+    },
+    "Delete the selected skills": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "選択したスキルを削除します"
+          }
+        }
+      }
+    },
+    "Delete “%@”?": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "「%@」を削除しますか？"
+          }
+        }
+      }
+    },
+    "Delete…": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "削除…"
+          }
+        }
+      }
+    },
+    "Description": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "説明"
+          }
+        }
+      }
+    },
+    "Detail": {
+      "shouldTranslate": false
+    },
+    "Disable this server": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "このサーバーを無効にします"
+          }
+        }
+      }
+    },
+    "Edit MCP Server": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MCP サーバーを編集"
+          }
+        }
+      }
+    },
+    "Edit Skill": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "スキルを編集"
+          }
+        }
+      }
+    },
+    "Edited as Markdown": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Markdown として編集"
+          }
+        }
+      }
+    },
+    "Edit…": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "編集…"
+          }
+        }
+      }
+    },
+    "Enable this server": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "このサーバーを有効にします"
+          }
+        }
+      }
+    },
+    "Enabled": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "有効"
+          }
+        }
+      }
+    },
+    "Endpoint": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "エンドポイント"
+          }
+        }
+      }
+    },
+    "Environment": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "環境変数"
+          }
+        }
+      }
+    },
+    "Error": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "エラー"
+          }
+        }
+      }
+    },
+    "Frontmatter": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "フロントマター"
+          }
+        }
+      }
+    },
+    "Grant Access": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "アクセスを許可"
+          }
+        }
+      }
+    },
+    "Grant Access…": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "アクセスを許可…"
+          }
+        }
+      }
+    },
+    "HTTP": {
+      "shouldTranslate": false
+    },
+    "HTTP %lld": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "HTTP %lld"
+          }
+        }
+      }
+    },
+    "Import": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "読み込む"
+          }
+        }
+      }
+    },
+    "Import a skill folder or create a new skill": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "スキルフォルダを読み込むか、新しいスキルを作成します"
+          }
+        }
+      }
+    },
+    "Instructions": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "本文"
+          }
+        }
+      }
+    },
+    "Invalid URL": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "URL が正しくありません"
+          }
+        }
+      }
+    },
+    "KEY": {
+      "shouldTranslate": false
+    },
+    "Key": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "キー"
+          }
+        }
+      }
+    },
+    "MCP Servers": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MCP サーバー"
+          }
+        }
+      }
+    },
+    "MIT": {
+      "shouldTranslate": false
+    },
+    "Manage the MCP servers and skills of the coding agents in Xcode.": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xcode のコーディングエージェントの MCP サーバーとスキルを管理します。"
+          }
+        }
+      }
+    },
+    "Name": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "名前"
+          }
+        }
+      }
+    },
+    "New Skill": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "新しいスキル"
+          }
+        }
+      }
+    },
+    "New Skill…": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "新しいスキル…"
+          }
+        }
+      }
+    },
+    "No MCP Servers": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MCP サーバーがありません"
+          }
+        }
+      }
+    },
+    "No Skills": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "スキルがありません"
+          }
+        }
+      }
+    },
+    "OK": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OK"
+          }
+        }
+      }
+    },
+    "Open Source Licenses": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "オープンソースライセンス"
+          }
+        }
+      }
+    },
+    "Open Source Licenses…": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "オープンソースライセンス…"
+          }
+        }
+      }
+    },
+    "Pasting text with spaces inserts one row per word.": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "スペースを含むテキストを貼り付けると、単語ごとに行が分かれます。"
+          }
+        }
+      }
+    },
+    "Reload": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "再読み込み"
+          }
+        }
+      }
+    },
+    "Reload the configuration file from disk": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "設定ファイルをディスクから読み直します"
+          }
+        }
+      }
+    },
+    "Reload the skills folder from disk": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "スキルフォルダをディスクから読み直します"
+          }
+        }
+      }
+    },
+    "Remove": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "削除"
+          }
+        }
+      }
+    },
+    "Removed from %@. A backup of the file is kept.": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ から削除されます。ファイルのバックアップは残ります。"
+          }
+        }
+      }
+    },
+    "Retry": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "再試行"
+          }
+        }
+      }
+    },
+    "Revision": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "リビジョン"
+          }
+        }
+      }
+    },
+    "Save": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "保存"
+          }
+        }
+      }
+    },
+    "Section": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "セクション"
+          }
+        }
+      }
+    },
+    "Select a Dependency": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "依存ライブラリを選択"
+          }
+        }
+      }
+    },
+    "Select a server to delete it": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "削除するサーバーを選択してください"
+          }
+        }
+      }
+    },
+    "Select a skill folder that contains SKILL.md. The folder will be copied into %@.": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SKILL.md を含むスキルフォルダを選択してください。フォルダは %@ にコピーされます。"
+          }
+        }
+      }
+    },
+    "Select a skill to delete it": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "削除するスキルを選択してください"
+          }
+        }
+      }
+    },
+    "Select an Agent": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "エージェントを選択"
+          }
+        }
+      }
+    },
+    "Select the CodingAssistant folder so XCAgentHub can read and update agent configurations.": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "XCAgentHub がエージェントの設定を読み書きできるように、CodingAssistant フォルダを選択してください。"
+          }
+        }
+      }
+    },
+    "Server responded (HTTP %lld)": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "サーバーが応答しました（HTTP %lld）"
+          }
+        }
+      }
+    },
+    "Show %@ in Finder": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ を Finder で表示します"
+          }
+        }
+      }
+    },
+    "Show in Finder": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Finder で表示"
+          }
+        }
+      }
+    },
+    "Sidebar": {
+      "shouldTranslate": false
+    },
+    "Skills": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "スキル"
+          }
+        }
+      }
+    },
+    "Standard I/O": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "標準入出力"
+          }
+        }
+      }
+    },
+    "Stored in %@/%@/SKILL.md. The name here is the frontmatter; the folder keeps its own name.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "Stored in %1$@/%2$@/SKILL.md. The name here is the frontmatter; the folder keeps its own name."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@/%@/SKILL.md に保存されています。ここでの名前はフロントマターのもので、フォルダ名は変わりません。"
+          }
+        }
+      }
+    },
+    "Stored in ClaudeAgentConfig/skills/compose-app-icon/SKILL.md": {
+      "shouldTranslate": false
+    },
+    "Test Connection": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "接続をテスト"
+          }
+        }
+      }
+    },
+    "The configuration file %@ does not exist yet. It will be created when you add a server.": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "設定ファイル %@ はまだありません。サーバーを追加すると作成されます。"
+          }
+        }
+      }
+    },
+    "The folder “%@” does not contain a SKILL.md file.": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "フォルダ「%@」に SKILL.md がありません。"
+          }
+        }
+      }
+    },
+    "The skill folder and all of its files will be removed from %@.": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "スキルフォルダとその中のすべてのファイルが %@ から削除されます。"
+          }
+        }
+      }
+    },
+    "The skill name must contain at least one letter or number.": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "スキル名には英数字を 1 文字以上含めてください。"
+          }
+        }
+      }
+    },
+    "This SKILL.md uses YAML the form cannot represent — a comment, a multi-line value, or a nested map. Editing the text keeps it intact.": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "この SKILL.md には、フォームでは表現できない YAML（コメント、複数行の値、ネストしたマップ）が含まれています。テキストのまま編集すれば内容は保たれます。"
+          }
+        }
+      }
+    },
+    "Tool": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ツール"
+          }
+        }
+      }
+    },
+    "Transport": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "トランスポート"
+          }
+        }
+      }
+    },
+    "URL": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "URL"
+          }
+        }
+      }
+    },
+    "Unexpected response": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "応答を解釈できません"
+          }
+        }
+      }
+    },
+    "Value": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "値"
+          }
+        }
+      }
+    },
+    "Version": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "バージョン"
+          }
+        }
+      }
+    },
+    "Welcome to XCAgentHub": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "XCAgentHub へようこそ"
+          }
+        }
+      }
+    },
+    "What this skill does and when to use it": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "このスキルが何をするか、どんなときに使うか"
+          }
+        }
+      }
+    },
+    "Written as a comma-separated %@ list. Leave empty to allow every tool.": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "カンマ区切りの %@ として書き出されます。空のままにすると、すべてのツールを許可します。"
+          }
+        }
+      }
+    },
+    "XCAgentHub": {
+      "shouldTranslate": false
+    },
+    "XCAgentHub manages the MCP servers of the coding agents that run inside Xcode. To read and update their configuration files, grant access to the folder below.": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "XCAgentHub は、Xcode 内で動作するコーディングエージェントの MCP サーバーを管理します。設定ファイルを読み書きするために、下のフォルダへのアクセスを許可してください。"
+          }
+        }
+      }
+    },
+    "argument": {
+      "shouldTranslate": false
+    },
+    "https://example.com/mcp": {
+      "shouldTranslate": false
+    },
+    "license": {
+      "shouldTranslate": false
+    },
+    "my-mcp-server": {
+      "shouldTranslate": false
+    },
+    "my-skill": {
+      "shouldTranslate": false
+    },
+    "stdio": {
+      "shouldTranslate": false
+    },
+    "value": {
+      "shouldTranslate": false
+    },
+    "“%@” links into %@, which this app cannot read. Import that folder directly instead, or replace the link with a copy.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "“%1$@” links into %2$@, which this app cannot read. Import that folder directly instead, or replace the link with a copy."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "「%@」は %@ へのリンクですが、このアプリからは読み取れません。そのフォルダを直接読み込むか、リンクを実体のコピーに置き換えてください。"
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}

@@ -9,13 +9,13 @@ enum SkillStoreError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .invalidName:
-            return "The skill name must contain at least one letter or number."
+            return String(localized: "The skill name must contain at least one letter or number.")
         case .skillAlreadyExists(let name):
-            return "A skill named \u{201C}\(name)\u{201D} already exists."
+            return String(localized: "A skill named \u{201C}\(name)\u{201D} already exists.")
         case .notASkillDirectory(let name):
-            return "The folder \u{201C}\(name)\u{201D} does not contain a SKILL.md file."
+            return String(localized: "The folder \u{201C}\(name)\u{201D} does not contain a SKILL.md file.")
         case .unreadableLinkTarget(let name, let targetDirectory):
-            return "\u{201C}\(name)\u{201D} links into \(targetDirectory), which this app cannot read. Import that folder directly instead, or replace the link with a copy."
+            return String(localized: "\u{201C}\(name)\u{201D} links into \(targetDirectory), which this app cannot read. Import that folder directly instead, or replace the link with a copy.")
         }
     }
 }

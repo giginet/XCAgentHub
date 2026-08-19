@@ -17,7 +17,7 @@ struct ConnectionTester {
             let scheme = url.scheme?.lowercased(),
             scheme == "http" || scheme == "https"
         else {
-            return .failure(detail: "Invalid URL")
+            return .failure(detail: String(localized: "Invalid URL"))
         }
 
         var request = URLRequest(url: url)
@@ -40,15 +40,15 @@ struct ConnectionTester {
         do {
             let (data, response) = try await URLSession.shared.data(for: request)
             guard let http = response as? HTTPURLResponse else {
-                return .failure(detail: "Unexpected response")
+                return .failure(detail: String(localized: "Unexpected response"))
             }
             guard (200..<300).contains(http.statusCode) else {
-                return .failure(detail: "HTTP \(http.statusCode)")
+                return .failure(detail: String(localized: "HTTP \(http.statusCode)"))
             }
             if let name = serverName(in: data) {
-                return .success(detail: "Connected to \(name)")
+                return .success(detail: String(localized: "Connected to \(name)"))
             }
-            return .success(detail: "Server responded (HTTP \(http.statusCode))")
+            return .success(detail: String(localized: "Server responded (HTTP \(http.statusCode))"))
         } catch {
             return .failure(detail: error.localizedDescription)
         }

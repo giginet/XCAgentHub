@@ -8,7 +8,7 @@ struct ServerFormView: View {
 
         var id: String { rawValue }
 
-        var label: String {
+        var label: LocalizedStringResource {
             switch self {
             case .stdio: return "Standard I/O"
             case .http: return "HTTP"

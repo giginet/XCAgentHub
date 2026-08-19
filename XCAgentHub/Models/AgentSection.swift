@@ -8,7 +8,7 @@ enum AgentSection: String, CaseIterable, Identifiable, Sendable {
 
     var id: String { rawValue }
 
-    var displayName: String {
+    var displayName: LocalizedStringResource {
         switch self {
         case .servers: return "MCP Servers"
         case .skills: return "Skills"

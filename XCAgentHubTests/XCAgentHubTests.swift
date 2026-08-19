@@ -589,10 +589,14 @@ struct ConnectionTesterTests {
         }
     }
 
-    @Test func invalidURLFails() async {
-        #expect(await ConnectionTester.testHTTP(url: "") == .failure(detail: "Invalid URL"))
-        #expect(await ConnectionTester.testHTTP(url: "not a url") == .failure(detail: "Invalid URL"))
-        #expect(await ConnectionTester.testHTTP(url: "ftp://example.com") == .failure(detail: "Invalid URL"))
+    // The detail text is localized, so assert on the outcome, not the wording.
+    @Test(arguments: ["", "not a url", "ftp://example.com"])
+    func invalidURLFails(url: String) async {
+        let result = await ConnectionTester.testHTTP(url: url)
+        guard case .failure = result else {
+            Issue.record("expected failure for \u{201C}\(url)\u{201D}, got \(result)")
+            return
+        }
     }
 }
 

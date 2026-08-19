@@ -147,9 +147,9 @@ struct ServerListView: View {
             .buttonStyle(.borderless)
             .labelStyle(.iconOnly)
             .disabled(selectedServerNames.isEmpty)
-            .help(selectedServerNames.isEmpty ? "Select a server to delete it" : "Delete the selected servers")
+            .help(selectedServerNames.isEmpty ? Text("Select a server to delete it") : Text("Delete the selected servers"))
             Spacer()
-            Text(serverCount == 1 ? "1 server" : "\(serverCount) servers")
+            Text("\(serverCount) servers")
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
@@ -157,11 +157,11 @@ struct ServerListView: View {
         .padding(.vertical, 6)
     }
 
-    private var deletionTitle: String {
+    private var deletionTitle: Text {
         if serversPendingDeletion.count == 1, let server = serversPendingDeletion.first {
-            return "Delete \u{201C}\(server.name)\u{201D}?"
+            return Text("Delete \u{201C}\(server.name)\u{201D}?")
         }
-        return "Delete \(serversPendingDeletion.count) servers?"
+        return Text("Delete \(serversPendingDeletion.count) servers?")
     }
 
     private func server(named name: String) -> MCPServer? {
@@ -188,7 +188,7 @@ private struct ServerRowView: View {
                 .toggleStyle(.switch)
                 .controlSize(.small)
                 .labelsHidden()
-                .help(server.isEnabled ? "Disable this server" : "Enable this server")
+                .help(server.isEnabled ? Text("Disable this server") : Text("Enable this server"))
             VStack(alignment: .leading, spacing: 2) {
                 Text(server.name)
                     .font(.headline)

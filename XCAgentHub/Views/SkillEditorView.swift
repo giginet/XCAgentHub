@@ -31,7 +31,7 @@ struct SkillEditorView: View {
                 ProgressView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             case .form:
-                SkillFormView(draft: $draft, nameFooter: Text(footerText))
+                SkillFormView(draft: $draft, nameFooter: footer)
             case .raw:
                 rawEditor
             }
@@ -65,8 +65,8 @@ struct SkillEditorView: View {
         }
     }
 
-    private var footerText: String {
-        "Stored in \(agent.skillsDirectoryRelativePath)/\(skill.directoryName)/SKILL.md. The name here is the frontmatter; the folder keeps its own name."
+    private var footer: Text {
+        Text("Stored in \(agent.skillsDirectoryRelativePath)/\(skill.directoryName)/SKILL.md. The name here is the frontmatter; the folder keeps its own name.")
     }
 
     private var rawEditor: some View {
