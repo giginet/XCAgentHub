@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		07089A3130343D82008911A0 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		07089A5E303440B5008911A0 /* TOML in Frameworks */ = {isa = PBXBuildFile; productRef = DDBB262FA1E4038B8D3CB375 /* TOML */; };
+		07089C08303565E6008911A0 /* Milepost in Frameworks */ = {isa = PBXBuildFile; productRef = B40CD8EAF62FC9A88CA6D535 /* Milepost */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,6 +44,7 @@
 		000000000000000130000000 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
+				07089C08303565E6008911A0 /* Milepost in Frameworks */,
 				07089A5E303440B5008911A0 /* TOML in Frameworks */,
 				07089A3130343D82008911A0 /* (null) in Frameworks */,
 			);
@@ -86,12 +88,16 @@
 			);
 			buildRules = (
 			);
+			dependencies = (
+				B40CD8EAF62FC9A88CA6D537 /* PBXTargetDependency */,
+			);
 			fileSystemSynchronizedGroups = (
 				000000000000000000000010 /* XCAgentHub */,
 			);
 			name = XCAgentHub;
 			packageProductDependencies = (
 				DDBB262FA1E4038B8D3CB375 /* TOML */,
+				B40CD8EAF62FC9A88CA6D535 /* Milepost */,
 			);
 			productName = MyApp;
 			productReference = 000000000000000000000120 /* XCAgentHub.app */;
@@ -147,6 +153,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				3709CF4026CADD2BCE7F03C2 /* XCRemoteSwiftPackageReference "swift-toml" */,
+				FA74E41021D227AE9256E8AC /* XCRemoteSwiftPackageReference "Milepost" */,
 			);
 			preferredProjectObjectVersion = 90;
 			productRefGroup = 000000000000000000000020 /* Products */;
@@ -191,6 +198,10 @@
 			name = XCAgentHub;
 			target = 000000000000000100000000 /* XCAgentHub */;
 			targetProxy = D101C6C573901113D906D159 /* PBXContainerItemProxy */;
+		};
+		B40CD8EAF62FC9A88CA6D537 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = B40CD8EAF62FC9A88CA6D536 /* PrepareMilepost */;
 		};
 /* End PBXTargetDependency section */
 
@@ -499,9 +510,27 @@
 				minimumVersion = 2.0.0;
 			};
 		};
+		FA74E41021D227AE9256E8AC /* XCRemoteSwiftPackageReference "Milepost" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/giginet/Milepost.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.1.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		B40CD8EAF62FC9A88CA6D535 /* Milepost */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FA74E41021D227AE9256E8AC /* XCRemoteSwiftPackageReference "Milepost" */;
+			productName = Milepost;
+		};
+		B40CD8EAF62FC9A88CA6D536 /* PrepareMilepost */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FA74E41021D227AE9256E8AC /* XCRemoteSwiftPackageReference "Milepost" */;
+			productName = "plugin:PrepareMilepost";
+		};
 		DDBB262FA1E4038B8D3CB375 /* TOML */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 3709CF4026CADD2BCE7F03C2 /* XCRemoteSwiftPackageReference "swift-toml" */;

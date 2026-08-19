@@ -1,6 +1,15 @@
 {
-  "originHash" : "035b9c99416dc49b9efce5f56966e013a099d03dc1b633ed773688396d680b2f",
+  "originHash" : "fb47fad4fcc6013ccd4c8d8519aa6ad82dafd8d071549cf9cd8a5858f20f81ed",
   "pins" : [
+    {
+      "identity" : "milepost",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/giginet/Milepost.git",
+      "state" : {
+        "revision" : "618a706d12bcda824509934235bda09b9fe1cae6",
+        "version" : "1.1.0"
+      }
+    },
     {
       "identity" : "swift-toml",
       "kind" : "remoteSourceControl",
