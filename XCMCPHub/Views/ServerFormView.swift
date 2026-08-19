@@ -41,6 +41,8 @@ struct ServerFormView: View {
     @State private var arguments: [ArgumentRow]
     @State private var environmentRows: [EnvironmentRow]
     @State private var url: String
+    @State private var isTestingConnection = false
+    @State private var connectionTestResult: ConnectionTestResult?
 
     init(agent: AgentKind, original: MCPServer?) {
         self.agent = agent
@@ -100,6 +102,18 @@ struct ServerFormView: View {
 
             Divider()
             HStack {
+                if transportKind == .http {
+                    Button("Test Connection") {
+                        runConnectionTest()
+                    }
+                    .disabled(isTestingConnection || url.trimmingCharacters(in: .whitespaces).isEmpty)
+                    if isTestingConnection {
+                        ProgressView()
+                            .controlSize(.small)
+                    } else {
+                        connectionTestResultView
+                    }
+                }
                 Spacer()
                 Button("Cancel", role: .cancel) {
                     dismiss()
@@ -116,6 +130,44 @@ struct ServerFormView: View {
         }
         .navigationTitle(original == nil ? "Add MCP Server" : "Edit MCP Server")
         .frame(width: 520, height: transportKind == .stdio ? 640 : 280)
+        .onChange(of: url) {
+            connectionTestResult = nil
+        }
+        .onChange(of: transportKind) {
+            connectionTestResult = nil
+        }
+    }
+
+    // MARK: - Connection test
+
+    @ViewBuilder
+    private var connectionTestResultView: some View {
+        switch connectionTestResult {
+        case .success(let detail):
+            Label(detail, systemImage: "checkmark.circle.fill")
+                .foregroundStyle(.green)
+                .lineLimit(1)
+                .truncationMode(.tail)
+                .help(detail)
+        case .failure(let detail):
+            Label(detail, systemImage: "xmark.circle.fill")
+                .foregroundStyle(.red)
+                .lineLimit(1)
+                .truncationMode(.tail)
+                .help(detail)
+        case nil:
+            EmptyView()
+        }
+    }
+
+    private func runConnectionTest() {
+        isTestingConnection = true
+        connectionTestResult = nil
+        let target = url.trimmingCharacters(in: .whitespaces)
+        Task {
+            connectionTestResult = await ConnectionTester.testHTTP(url: target)
+            isTestingConnection = false
+        }
     }
 
     // MARK: - Arguments table
@@ -280,6 +332,18 @@ struct ServerFormView: View {
 #Preview("Add") {
     ServerFormView(agent: .claudeCode, original: nil)
         .environment(MCPHubViewModel.preview)
+}
+
+#Preview("Edit HTTP") {
+    ServerFormView(
+        agent: .claudeCode,
+        original: MCPServer(
+            name: "safari-mcp",
+            transport: .http(url: "https://example.com/mcp"),
+            isEnabled: true
+        )
+    )
+    .environment(MCPHubViewModel.preview)
 }
 
 #Preview("Edit") {

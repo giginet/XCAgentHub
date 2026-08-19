@@ -257,6 +257,25 @@ struct GeminiConfigStoreTests {
 }
 
 @MainActor
+@Suite("ConnectionTester")
+struct ConnectionTesterTests {
+    @Test func unreachableServerFails() async {
+        // Port 1 is never listening locally, so the connection is refused.
+        let result = await ConnectionTester.testHTTP(url: "http://127.0.0.1:1/mcp")
+        guard case .failure = result else {
+            Issue.record("expected failure, got \(result)")
+            return
+        }
+    }
+
+    @Test func invalidURLFails() async {
+        #expect(await ConnectionTester.testHTTP(url: "") == .failure(detail: "Invalid URL"))
+        #expect(await ConnectionTester.testHTTP(url: "not a url") == .failure(detail: "Invalid URL"))
+        #expect(await ConnectionTester.testHTTP(url: "ftp://example.com") == .failure(detail: "Invalid URL"))
+    }
+}
+
+@MainActor
 @Suite("CodexConfigStore")
 struct CodexConfigStoreTests {
     private let codexFixture = """
