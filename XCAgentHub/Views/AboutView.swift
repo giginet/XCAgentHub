@@ -1,7 +1,7 @@
 import SwiftUI
 
-/// The About window: app icon, version, build number, and the commit the
-/// build came from.
+/// The About window: app icon, version, and the revision the build came
+/// from.
 struct AboutView: View {
     @Environment(\.openWindow) private var openWindow
 
@@ -20,12 +20,8 @@ struct AboutView: View {
             Divider()
             Grid(alignment: .leading, horizontalSpacing: 12, verticalSpacing: 6) {
                 row("Version", AppVersion.short)
-                row("Build", AppVersion.build)
                 if let shortHash = AppVersion.shortHash {
-                    row("Commit", shortHash, isMonospaced: true)
-                }
-                if let branch = AppVersion.branch {
-                    row("Branch", branch, isMonospaced: true)
+                    row("Revision", shortHash, isMonospaced: true)
                 }
             }
 
