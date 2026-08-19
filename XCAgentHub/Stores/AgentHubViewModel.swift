@@ -89,6 +89,17 @@ final class AgentHubViewModel {
         errorsByAgent[agent] != nil || skillErrorsByAgent[agent] != nil
     }
 
+    /// The agent's config file on disk, or nil until folder access is granted.
+    func configFileURL(for agent: AgentKind) -> URL? {
+        access.rootDirectoryURL.map { agent.configFileURL(in: $0) }
+    }
+
+    /// The agent's skills folder on disk, or nil until folder access is
+    /// granted. The folder itself may not exist yet.
+    func skillsDirectoryURL(for agent: AgentKind) -> URL? {
+        access.rootDirectoryURL.map { agent.skillsDirectoryURL(in: $0) }
+    }
+
     func configFileExists(for agent: AgentKind) -> Bool {
         guard let root = access.rootDirectoryURL else { return false }
         return FileManager.default.fileExists(atPath: agent.configFileURL(in: root).path)

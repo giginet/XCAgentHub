@@ -438,6 +438,49 @@ struct SkillStoreTests {
         }
     }
 
+    @Test func importReportsALinkTargetItCannotRead() throws {
+        let directory = try makeTemporaryDirectory()
+        defer { try? FileManager.default.removeItem(at: directory) }
+
+        // Stand in for a sandbox denial by making the target unreadable.
+        let vault = directory.appending(path: "vault")
+        try FileManager.default.createDirectory(at: vault, withIntermediateDirectories: true)
+        let target = vault.appending(path: "SKILL.md")
+        try "---\nname: locked\n---".write(to: target, atomically: true, encoding: .utf8)
+        try FileManager.default.setAttributes([.posixPermissions: 0o000], ofItemAtPath: target.path)
+        defer { try? FileManager.default.setAttributes([.posixPermissions: 0o644], ofItemAtPath: target.path) }
+
+        let source = directory.appending(path: "locked-skill")
+        try FileManager.default.createDirectory(at: source, withIntermediateDirectories: true)
+        try FileManager.default.createSymbolicLink(
+            atPath: source.appending(path: "SKILL.md").path,
+            withDestinationPath: "../vault/SKILL.md"
+        )
+
+        let skillsDirectory = directory.appending(path: "skills")
+        let store = SkillStore(skillsDirectoryURL: skillsDirectory, agent: .claudeCode)
+
+        var thrown: SkillStoreError?
+        #expect(throws: SkillStoreError.self) {
+            do {
+                try store.importSkill(from: source)
+            } catch let error as SkillStoreError {
+                thrown = error
+                throw error
+            }
+        }
+        guard case .unreadableLinkTarget(let name, let targetDirectory) = thrown else {
+            Issue.record("expected unreadableLinkTarget, got \(String(describing: thrown))")
+            return
+        }
+        #expect(name == "SKILL.md")
+        #expect(targetDirectory.hasSuffix("/vault"))
+
+        // A failed import must not leave a half-copied folder behind.
+        #expect(try store.list().isEmpty)
+        #expect(!FileManager.default.fileExists(atPath: skillsDirectory.appending(path: "locked-skill").path))
+    }
+
     @Test func saveOverwritesAndDeleteRemoves() throws {
         let directory = try makeTemporaryDirectory()
         defer { try? FileManager.default.removeItem(at: directory) }

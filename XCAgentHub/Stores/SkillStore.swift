@@ -4,6 +4,7 @@ enum SkillStoreError: LocalizedError {
     case invalidName
     case skillAlreadyExists(String)
     case notASkillDirectory(String)
+    case unreadableLinkTarget(name: String, targetDirectory: String)
 
     var errorDescription: String? {
         switch self {
@@ -13,6 +14,8 @@ enum SkillStoreError: LocalizedError {
             return "A skill named \u{201C}\(name)\u{201D} already exists."
         case .notASkillDirectory(let name):
             return "The folder \u{201C}\(name)\u{201D} does not contain a SKILL.md file."
+        case .unreadableLinkTarget(let name, let targetDirectory):
+            return "\u{201C}\(name)\u{201D} links into \(targetDirectory), which this app cannot read. Import that folder directly instead, or replace the link with a copy."
         }
     }
 }
@@ -98,6 +101,18 @@ struct SkillStore {
         let source = sourceDirectory.resolvingSymlinksInPath()
         let sourceSkillFile = source.appending(path: "SKILL.md")
         guard FileManager.default.fileExists(atPath: sourceSkillFile.path) else {
+            // Reading the link itself is allowed even when its target is not,
+            // so say which folder is out of reach rather than claiming the
+            // skill has no SKILL.md.
+            if let target = try? FileManager.default.destinationOfSymbolicLink(atPath: sourceSkillFile.path) {
+                throw SkillStoreError.unreadableLinkTarget(
+                    name: "SKILL.md",
+                    targetDirectory: URL(filePath: target, relativeTo: source)
+                        .standardizedFileURL
+                        .deletingLastPathComponent()
+                        .path
+                )
+            }
             throw SkillStoreError.notASkillDirectory(sourceDirectory.lastPathComponent)
         }
         let destination = skillsDirectoryURL.appending(path: sourceDirectory.lastPathComponent)
@@ -105,19 +120,37 @@ struct SkillStore {
             throw SkillStoreError.skillAlreadyExists(sourceDirectory.lastPathComponent)
         }
         try FileManager.default.createDirectory(at: skillsDirectoryURL, withIntermediateDirectories: true)
-        try Self.copyResolvingSymlinks(from: source, to: destination)
+        do {
+            try Self.copyResolvingSymlinks(from: source, to: destination)
+        } catch {
+            // Never leave a half-copied folder behind: it would make every
+            // later attempt fail as "already exists".
+            try? FileManager.default.removeItem(at: destination)
+            throw error
+        }
         return makeSkill(directoryURL: destination)
     }
 
     /// Recursive copy that follows symlinks rather than preserving them.
     /// Entries whose target does not resolve are skipped, since they carry no
     /// content; `depth` stops a symlink loop from recursing forever.
+    ///
+    /// A link may also resolve to a path the app is not allowed to read: the
+    /// open panel grants access to the folder the user picked, not to wherever
+    /// its links point. That is reported rather than skipped, because it would
+    /// otherwise produce a skill with pieces silently missing.
     private static func copyResolvingSymlinks(from source: URL, to destination: URL, depth: Int = 0) throws {
         guard depth < 16 else { return }
         let manager = FileManager.default
         let resolved = source.resolvingSymlinksInPath()
         var isDirectory: ObjCBool = false
         guard manager.fileExists(atPath: resolved.path, isDirectory: &isDirectory) else { return }
+        guard resolved.path == source.path || manager.isReadableFile(atPath: resolved.path) else {
+            throw SkillStoreError.unreadableLinkTarget(
+                name: source.lastPathComponent,
+                targetDirectory: resolved.deletingLastPathComponent().path
+            )
+        }
         guard isDirectory.boolValue else {
             try manager.copyItem(at: resolved, to: destination)
             return

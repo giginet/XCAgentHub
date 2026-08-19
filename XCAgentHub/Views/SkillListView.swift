@@ -49,6 +49,15 @@ struct SkillListView: View {
         .navigationSubtitle(agent.skillsDirectoryRelativePath)
         .toolbar {
             ToolbarItem {
+                Button("Show in Finder", systemImage: "folder") {
+                    if let url = model.skillsDirectoryURL(for: agent) {
+                        FinderReveal.show(url)
+                    }
+                }
+                .disabled(model.skillsDirectoryURL(for: agent) == nil)
+                .help("Show \(agent.skillsDirectoryRelativePath) in Finder")
+            }
+            ToolbarItem {
                 Button("Reload", systemImage: "arrow.clockwise") {
                     model.reloadSkills(agent)
                 }

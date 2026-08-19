@@ -49,6 +49,15 @@ struct ServerListView: View {
         .navigationSubtitle(agent.configFileRelativePath)
         .toolbar {
             ToolbarItem {
+                Button("Show in Finder", systemImage: "folder") {
+                    if let url = model.configFileURL(for: agent) {
+                        FinderReveal.show(url)
+                    }
+                }
+                .disabled(model.configFileURL(for: agent) == nil)
+                .help("Show \(agent.configFileRelativePath) in Finder")
+            }
+            ToolbarItem {
                 Button("Reload", systemImage: "arrow.clockwise") {
                     model.reload(agent)
                 }
