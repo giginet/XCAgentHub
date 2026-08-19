@@ -1,39 +1,25 @@
 import SwiftUI
 
-/// Sidebar with one section per agent, each offering its MCP servers and
-/// its skills.
+/// Sidebar listing the supported agents. What to show for the selected agent
+/// (MCP servers or skills) is picked in the detail pane instead.
 struct SidebarView: View {
     @Environment(AgentHubViewModel.self) private var model
 
     var body: some View {
         @Bindable var model = model
-        List(selection: $model.selection) {
-            ForEach(AgentKind.allCases) { agent in
-                Section {
-                    Label("MCP Servers", systemImage: "server.rack")
-                        .badge(serverBadge(for: agent))
-                        .tag(SidebarItem.servers(agent))
-                    Label("Skills", systemImage: "text.book.closed")
-                        .badge(Text("\(model.skills(for: agent).count)"))
-                        .tag(SidebarItem.skills(agent))
-                } header: {
-                    Label(agent.displayName, systemImage: agent.systemImage)
-                }
-            }
+        List(AgentKind.allCases, selection: $model.selectedAgent) { agent in
+            Label(agent.displayName, systemImage: agent.systemImage)
+                .badge(badge(for: agent))
+                .tag(agent)
         }
         .listStyle(.sidebar)
         .navigationTitle("XCAgentHub")
-        .navigationSplitViewColumnWidth(min: 190, ideal: 210)
+        .navigationSplitViewColumnWidth(min: 170, ideal: 190)
     }
 
-    private func serverBadge(for agent: AgentKind) -> Text? {
-        if model.loadError(for: agent) != nil {
-            return Text(Image(systemName: "exclamationmark.triangle"))
-        }
-        guard model.configFileExists(for: agent) else {
-            return Text("–")
-        }
-        return Text("\(model.servers(for: agent).count)")
+    private func badge(for agent: AgentKind) -> Text? {
+        guard model.hasLoadError(for: agent) else { return nil }
+        return Text(Image(systemName: "exclamationmark.triangle"))
     }
 }
 

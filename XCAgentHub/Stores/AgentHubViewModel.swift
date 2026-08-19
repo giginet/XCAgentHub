@@ -1,20 +1,17 @@
 import Foundation
 import Observation
 
-/// What the sidebar can select: one feature of one agent.
-enum SidebarItem: Hashable {
-    case servers(AgentKind)
-    case skills(AgentKind)
-}
-
-/// App-wide state: the sidebar selection plus the MCP servers and skills
-/// loaded for each agent. Every config mutation backs up the target file
-/// first, writes it, then reloads from disk.
+/// App-wide state: the selected agent and section plus the MCP servers and
+/// skills loaded for each agent. Every config mutation backs up the target
+/// file first, writes it, then reloads from disk.
 @Observable
 final class AgentHubViewModel {
     let access: ConfigAccessManager
 
-    var selection: SidebarItem? = .servers(.claudeCode)
+    /// The agent picked in the sidebar.
+    var selectedAgent: AgentKind? = .claudeCode
+    /// The section picked with the segmented control in the detail pane.
+    var selectedSection: AgentSection = .servers
     private(set) var serversByAgent: [AgentKind: [MCPServer]] = [:]
     private(set) var errorsByAgent: [AgentKind: String] = [:]
     private(set) var skillsByAgent: [AgentKind: [Skill]] = [:]
@@ -84,6 +81,12 @@ final class AgentHubViewModel {
 
     func loadError(for agent: AgentKind) -> String? {
         errorsByAgent[agent]
+    }
+
+    /// True when either the config file or the skills folder failed to load,
+    /// so the sidebar can flag the agent without naming the section.
+    func hasLoadError(for agent: AgentKind) -> Bool {
+        errorsByAgent[agent] != nil || skillErrorsByAgent[agent] != nil
     }
 
     func configFileExists(for agent: AgentKind) -> Bool {

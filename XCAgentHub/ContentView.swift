@@ -4,22 +4,18 @@ struct ContentView: View {
     @Environment(AgentHubViewModel.self) private var model
 
     var body: some View {
-        @Bindable var model = model
         Group {
             if model.hasFolderAccess {
                 NavigationSplitView {
                     SidebarView()
                 } detail: {
-                    switch model.selection {
-                    case .servers(let agent):
-                        ServerListView(agent: agent)
-                    case .skills(let agent):
-                        SkillListView(agent: agent)
-                    case nil:
+                    if let agent = model.selectedAgent {
+                        AgentDetailView(agent: agent)
+                    } else {
                         ContentUnavailableView(
-                            "Select an Item",
+                            "Select an Agent",
                             systemImage: "sidebar.left",
-                            description: Text("Choose an agent's MCP servers or skills in the sidebar.")
+                            description: Text("Choose an agent in the sidebar to manage its MCP servers and skills.")
                         )
                     }
                 }
