@@ -24,6 +24,7 @@ jobs:
         run: |
           sw_vers
           xcodebuild -version
+          swift --version
 
       - name: Run tests
         run: |

@@ -16,6 +16,9 @@
     {
       "layers": [
         {
+          "fill": {
+            "solid": "display-p3:1.00,0.58,0.08,1.00"
+          },
           "glass": true,
           "image-name": "hub.png",
           "name": "hub"
