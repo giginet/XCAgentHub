@@ -84,3 +84,7 @@ English and Japanese, through a String Catalog.
   for the About window
 
 Their licenses are bundled and shown under **XCAgentHub → Open Source Licenses**.
+
+## License
+
+XCAgentHub is released under the Apache License 2.0. See [LICENSE](LICENSE).
