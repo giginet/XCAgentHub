@@ -17,24 +17,24 @@
 			containerPortal = 000000000000000000000000 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 000000000000000100000000;
-			remoteInfo = XCMCPHub;
+			remoteInfo = XCAgentHub;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		000000000000000000000120 /* XCMCPHub.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XCMCPHub.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		07089A2A30343D72008911A0 /* XCMCPHubTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = XCMCPHubTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		000000000000000000000120 /* XCAgentHub.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XCAgentHub.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		07089A2A30343D72008911A0 /* XCAgentHubTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = XCAgentHubTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		000000000000000000000010 /* XCMCPHub */ = {
+		000000000000000000000010 /* XCAgentHub */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = XCMCPHub;
+			path = XCAgentHub;
 			sourceTree = "<group>";
 		};
-		07089A2B30343D72008911A0 /* XCMCPHubTests */ = {
+		07089A2B30343D72008911A0 /* XCAgentHubTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = XCMCPHubTests;
+			path = XCAgentHubTests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -58,8 +58,8 @@
 		000000000000000000000001 = {
 			isa = PBXGroup;
 			children = (
-				000000000000000000000010 /* XCMCPHub */,
-				07089A2B30343D72008911A0 /* XCMCPHubTests */,
+				000000000000000000000010 /* XCAgentHub */,
+				07089A2B30343D72008911A0 /* XCAgentHubTests */,
 				000000000000000000000020 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -67,8 +67,8 @@
 		000000000000000000000020 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				000000000000000000000120 /* XCMCPHub.app */,
-				07089A2A30343D72008911A0 /* XCMCPHubTests.xctest */,
+				000000000000000000000120 /* XCAgentHub.app */,
+				07089A2A30343D72008911A0 /* XCAgentHubTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -76,9 +76,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		000000000000000100000000 /* XCMCPHub */ = {
+		000000000000000100000000 /* XCAgentHub */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 000000000000000110000000 /* Build configuration list for PBXNativeTarget "XCMCPHub" */;
+			buildConfigurationList = 000000000000000110000000 /* Build configuration list for PBXNativeTarget "XCAgentHub" */;
 			buildPhases = (
 				000000000000000120000000 /* Sources */,
 				000000000000000130000000 /* Frameworks */,
@@ -87,19 +87,19 @@
 			buildRules = (
 			);
 			fileSystemSynchronizedGroups = (
-				000000000000000000000010 /* XCMCPHub */,
+				000000000000000000000010 /* XCAgentHub */,
 			);
-			name = XCMCPHub;
+			name = XCAgentHub;
 			packageProductDependencies = (
 				DDBB262FA1E4038B8D3CB375 /* TOML */,
 			);
 			productName = MyApp;
-			productReference = 000000000000000000000120 /* XCMCPHub.app */;
+			productReference = 000000000000000000000120 /* XCAgentHub.app */;
 			productType = "com.apple.product-type.application";
 		};
-		07089A2930343D72008911A0 /* XCMCPHubTests */ = {
+		07089A2930343D72008911A0 /* XCAgentHubTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 07089A2E30343D72008911A0 /* Build configuration list for PBXNativeTarget "XCMCPHubTests" */;
+			buildConfigurationList = 07089A2E30343D72008911A0 /* Build configuration list for PBXNativeTarget "XCAgentHubTests" */;
 			buildPhases = (
 				07089A2630343D72008911A0 /* Sources */,
 				07089A2730343D72008911A0 /* Frameworks */,
@@ -111,11 +111,11 @@
 				4F7621AA034850989049EEF9 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				07089A2B30343D72008911A0 /* XCMCPHubTests */,
+				07089A2B30343D72008911A0 /* XCAgentHubTests */,
 			);
-			name = XCMCPHubTests;
-			productName = XCMCPHubTests;
-			productReference = 07089A2A30343D72008911A0 /* XCMCPHubTests.xctest */;
+			name = XCAgentHubTests;
+			productName = XCAgentHubTests;
+			productReference = 07089A2A30343D72008911A0 /* XCAgentHubTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -136,7 +136,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 000000000000000010000000 /* Build configuration list for PBXProject "XCMCPHub" */;
+			buildConfigurationList = 000000000000000010000000 /* Build configuration list for PBXProject "XCAgentHub" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -153,8 +153,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				000000000000000100000000 /* XCMCPHub */,
-				07089A2930343D72008911A0 /* XCMCPHubTests */,
+				000000000000000100000000 /* XCAgentHub */,
+				07089A2930343D72008911A0 /* XCAgentHubTests */,
 			);
 		};
 /* End PBXProject section */
@@ -188,14 +188,14 @@
 /* Begin PBXTargetDependency section */
 		4F7621AA034850989049EEF9 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			name = XCMCPHub;
-			target = 000000000000000100000000 /* XCMCPHub */;
+			name = XCAgentHub;
+			target = 000000000000000100000000 /* XCAgentHub */;
 			targetProxy = D101C6C573901113D906D159 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		000000000000000011000000 /* Debug configuration for PBXProject "XCMCPHub" */ = {
+		000000000000000011000000 /* Debug configuration for PBXProject "XCAgentHub" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -265,7 +265,7 @@
 			};
 			name = Debug;
 		};
-		000000000000000012000000 /* Release configuration for PBXProject "XCMCPHub" */ = {
+		000000000000000012000000 /* Release configuration for PBXProject "XCAgentHub" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -327,7 +327,7 @@
 			};
 			name = Release;
 		};
-		000000000000000111000000 /* Debug configuration for PBXNativeTarget "XCMCPHub" */ = {
+		000000000000000111000000 /* Debug configuration for PBXNativeTarget "XCAgentHub" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -368,7 +368,7 @@
 			};
 			name = Debug;
 		};
-		000000000000000112000000 /* Release configuration for PBXNativeTarget "XCMCPHub" */ = {
+		000000000000000112000000 /* Release configuration for PBXNativeTarget "XCAgentHub" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -409,7 +409,7 @@
 			};
 			name = Release;
 		};
-		07089A2F30343D72008911A0 /* Debug configuration for PBXNativeTarget "XCMCPHubTests" */ = {
+		07089A2F30343D72008911A0 /* Debug configuration for PBXNativeTarget "XCAgentHubTests" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -420,7 +420,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.yourcompany.XCMCPHubTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yourcompany.XCAgentHubTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
@@ -430,12 +430,12 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/XCMCPHub.app/Contents/MacOS/XCMCPHub";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/XCAgentHub.app/Contents/MacOS/XCAgentHub";
 				XROS_DEPLOYMENT_TARGET = 27.0;
 			};
 			name = Debug;
 		};
-		07089A3030343D72008911A0 /* Release configuration for PBXNativeTarget "XCMCPHubTests" */ = {
+		07089A3030343D72008911A0 /* Release configuration for PBXNativeTarget "XCAgentHubTests" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -446,7 +446,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.yourcompany.XCMCPHubTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yourcompany.XCAgentHubTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
@@ -456,7 +456,7 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/XCMCPHub.app/Contents/MacOS/XCMCPHub";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/XCAgentHub.app/Contents/MacOS/XCAgentHub";
 				XROS_DEPLOYMENT_TARGET = 27.0;
 			};
 			name = Release;
@@ -464,27 +464,27 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		000000000000000010000000 /* Build configuration list for PBXProject "XCMCPHub" */ = {
+		000000000000000010000000 /* Build configuration list for PBXProject "XCAgentHub" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				000000000000000011000000 /* Debug configuration for PBXProject "XCMCPHub" */,
-				000000000000000012000000 /* Release configuration for PBXProject "XCMCPHub" */,
+				000000000000000011000000 /* Debug configuration for PBXProject "XCAgentHub" */,
+				000000000000000012000000 /* Release configuration for PBXProject "XCAgentHub" */,
 			);
 			defaultConfigurationName = Release;
 		};
-		000000000000000110000000 /* Build configuration list for PBXNativeTarget "XCMCPHub" */ = {
+		000000000000000110000000 /* Build configuration list for PBXNativeTarget "XCAgentHub" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				000000000000000111000000 /* Debug configuration for PBXNativeTarget "XCMCPHub" */,
-				000000000000000112000000 /* Release configuration for PBXNativeTarget "XCMCPHub" */,
+				000000000000000111000000 /* Debug configuration for PBXNativeTarget "XCAgentHub" */,
+				000000000000000112000000 /* Release configuration for PBXNativeTarget "XCAgentHub" */,
 			);
 			defaultConfigurationName = Release;
 		};
-		07089A2E30343D72008911A0 /* Build configuration list for PBXNativeTarget "XCMCPHubTests" */ = {
+		07089A2E30343D72008911A0 /* Build configuration list for PBXNativeTarget "XCAgentHubTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				07089A2F30343D72008911A0 /* Debug configuration for PBXNativeTarget "XCMCPHubTests" */,
-				07089A3030343D72008911A0 /* Release configuration for PBXNativeTarget "XCMCPHubTests" */,
+				07089A2F30343D72008911A0 /* Debug configuration for PBXNativeTarget "XCAgentHubTests" */,
+				07089A3030343D72008911A0 /* Release configuration for PBXNativeTarget "XCAgentHubTests" */,
 			);
 			defaultConfigurationName = Release;
 		};

@@ -2,7 +2,7 @@ import SwiftUI
 
 /// Sheet for creating a new skill or editing an existing skill's SKILL.md.
 struct SkillEditorView: View {
-    @Environment(MCPHubViewModel.self) private var model
+    @Environment(AgentHubViewModel.self) private var model
     @Environment(\.dismiss) private var dismiss
 
     let agent: AgentKind
@@ -105,7 +105,7 @@ struct SkillEditorView: View {
 
 #Preview("New") {
     SkillEditorView(agent: .claudeCode, skill: nil)
-        .environment(MCPHubViewModel.preview)
+        .environment(AgentHubViewModel.preview)
 }
 
 #Preview("Edit") {
@@ -118,5 +118,5 @@ struct SkillEditorView: View {
             directoryURL: URL(filePath: "/tmp/skills/compose-app-icon")
         )
     )
-    .environment(MCPHubViewModel.preview)
+    .environment(AgentHubViewModel.preview)
 }

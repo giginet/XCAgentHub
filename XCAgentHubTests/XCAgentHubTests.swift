@@ -1,11 +1,11 @@
 import Foundation
 import Testing
-@testable import XCMCPHub
+@testable import XCAgentHub
 
 /// Creates an isolated temporary directory for one test.
 private func makeTemporaryDirectory() throws -> URL {
     let url = FileManager.default.temporaryDirectory
-        .appending(path: "XCMCPHubTests-\(UUID().uuidString)")
+        .appending(path: "XCAgentHubTests-\(UUID().uuidString)")
     try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
     return url
 }

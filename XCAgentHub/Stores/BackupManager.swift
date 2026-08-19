@@ -13,7 +13,7 @@ struct BackupManager {
             create: true
         )
         let directory = base
-            .appending(path: "XCMCPHub/Backups")
+            .appending(path: "XCAgentHub/Backups")
             .appending(path: agent.rawValue)
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         return directory

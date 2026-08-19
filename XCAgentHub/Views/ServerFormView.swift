@@ -29,7 +29,7 @@ struct ServerFormView: View {
         var value: String
     }
 
-    @Environment(MCPHubViewModel.self) private var model
+    @Environment(AgentHubViewModel.self) private var model
     @Environment(\.dismiss) private var dismiss
 
     let agent: AgentKind
@@ -331,7 +331,7 @@ struct ServerFormView: View {
 
 #Preview("Add") {
     ServerFormView(agent: .claudeCode, original: nil)
-        .environment(MCPHubViewModel.preview)
+        .environment(AgentHubViewModel.preview)
 }
 
 #Preview("Edit HTTP") {
@@ -343,7 +343,7 @@ struct ServerFormView: View {
             isEnabled: true
         )
     )
-    .environment(MCPHubViewModel.preview)
+    .environment(AgentHubViewModel.preview)
 }
 
 #Preview("Edit") {
@@ -359,5 +359,5 @@ struct ServerFormView: View {
             isEnabled: true
         )
     )
-    .environment(MCPHubViewModel.preview)
+    .environment(AgentHubViewModel.preview)
 }

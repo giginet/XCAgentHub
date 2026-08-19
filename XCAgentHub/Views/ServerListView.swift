@@ -4,7 +4,7 @@ import SwiftUI
 /// and enable/disable controls. Clicking a row selects it; double-clicking
 /// (or right-click → Edit…) opens the edit sheet.
 struct ServerListView: View {
-    @Environment(MCPHubViewModel.self) private var model
+    @Environment(AgentHubViewModel.self) private var model
 
     let agent: AgentKind
 
@@ -158,6 +158,6 @@ private struct ServerRowView: View {
     } detail: {
         ServerListView(agent: .claudeCode)
     }
-    .environment(MCPHubViewModel.preview)
+    .environment(AgentHubViewModel.preview)
     .frame(width: 720, height: 420)
 }

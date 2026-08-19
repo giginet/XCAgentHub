@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    @Environment(MCPHubViewModel.self) private var model
+    @Environment(AgentHubViewModel.self) private var model
 
     var body: some View {
         @Bindable var model = model
@@ -41,5 +41,5 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
-        .environment(MCPHubViewModel.preview)
+        .environment(AgentHubViewModel.preview)
 }

@@ -3,7 +3,7 @@ import SwiftUI
 /// Sidebar with one section per agent, each offering its MCP servers and
 /// its skills.
 struct SidebarView: View {
-    @Environment(MCPHubViewModel.self) private var model
+    @Environment(AgentHubViewModel.self) private var model
 
     var body: some View {
         @Bindable var model = model
@@ -22,7 +22,7 @@ struct SidebarView: View {
             }
         }
         .listStyle(.sidebar)
-        .navigationTitle("XCMCPHub")
+        .navigationTitle("XCAgentHub")
         .navigationSplitViewColumnWidth(min: 190, ideal: 210)
     }
 
@@ -43,6 +43,6 @@ struct SidebarView: View {
     } detail: {
         Text("Detail")
     }
-    .environment(MCPHubViewModel.preview)
+    .environment(AgentHubViewModel.preview)
     .frame(width: 680, height: 480)
 }

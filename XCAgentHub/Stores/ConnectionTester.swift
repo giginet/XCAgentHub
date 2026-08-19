@@ -32,7 +32,7 @@ struct ConnectionTester {
             "params": [
                 "protocolVersion": "2025-06-18",
                 "capabilities": [String: Any](),
-                "clientInfo": ["name": "XCMCPHub", "version": "1.0"],
+                "clientInfo": ["name": "XCAgentHub", "version": "1.0"],
             ],
         ]
         request.httpBody = try? JSONSerialization.data(withJSONObject: body)

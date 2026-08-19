@@ -2,16 +2,16 @@ import SwiftUI
 
 /// Shown until the user grants sandbox access to the CodingAssistant folder.
 struct OnboardingView: View {
-    @Environment(MCPHubViewModel.self) private var model
+    @Environment(AgentHubViewModel.self) private var model
 
     var body: some View {
         VStack(spacing: 16) {
             Image(systemName: "folder.badge.gearshape")
                 .font(.system(size: 56))
                 .foregroundStyle(.tint)
-            Text("Welcome to XCMCPHub")
+            Text("Welcome to XCAgentHub")
                 .font(.title.bold())
-            Text("XCMCPHub manages the MCP servers of the coding agents that run inside Xcode. To read and update their configuration files, grant access to the folder below.")
+            Text("XCAgentHub manages the MCP servers of the coding agents that run inside Xcode. To read and update their configuration files, grant access to the folder below.")
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.secondary)
                 .frame(maxWidth: 420)
@@ -36,6 +36,6 @@ struct OnboardingView: View {
 
 #Preview {
     OnboardingView()
-        .environment(MCPHubViewModel.preview)
+        .environment(AgentHubViewModel.preview)
         .frame(width: 640, height: 420)
 }

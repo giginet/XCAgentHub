@@ -4,7 +4,7 @@ import SwiftUI
 /// Lists the skills installed for one agent. Clicking selects,
 /// double-clicking (or right-click → Edit…) opens the SKILL.md editor.
 struct SkillListView: View {
-    @Environment(MCPHubViewModel.self) private var model
+    @Environment(AgentHubViewModel.self) private var model
 
     let agent: AgentKind
 
@@ -179,7 +179,7 @@ private struct SkillRowView: View {
     } detail: {
         SkillListView(agent: .claudeCode)
     }
-    .environment(MCPHubViewModel.preview)
+    .environment(AgentHubViewModel.preview)
     .frame(width: 720, height: 420)
 }
 
@@ -189,6 +189,6 @@ private struct SkillRowView: View {
     } detail: {
         SkillListView(agent: .gemini)
     }
-    .environment(MCPHubViewModel.preview)
+    .environment(AgentHubViewModel.preview)
     .frame(width: 720, height: 420)
 }

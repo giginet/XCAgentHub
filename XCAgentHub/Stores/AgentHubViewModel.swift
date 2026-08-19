@@ -11,7 +11,7 @@ enum SidebarItem: Hashable {
 /// loaded for each agent. Every config mutation backs up the target file
 /// first, writes it, then reloads from disk.
 @Observable
-final class MCPHubViewModel {
+final class AgentHubViewModel {
     let access: ConfigAccessManager
 
     var selection: SidebarItem? = .servers(.claudeCode)
@@ -31,8 +31,8 @@ final class MCPHubViewModel {
     }
 
     /// Sample data for SwiftUI previews.
-    static var preview: MCPHubViewModel {
-        MCPHubViewModel(initialServers: [
+    static var preview: AgentHubViewModel {
+        AgentHubViewModel(initialServers: [
             .claudeCode: [
                 MCPServer(
                     name: "xcodeproj",

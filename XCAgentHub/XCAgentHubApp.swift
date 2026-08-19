@@ -1,8 +1,8 @@
 import SwiftUI
 
 @main
-struct XCMCPHubApp: App {
-    @State private var model = MCPHubViewModel()
+struct XCAgentHubApp: App {
+    @State private var model = AgentHubViewModel()
 
     var body: some Scene {
         WindowGroup {
