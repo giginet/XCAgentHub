@@ -1,0 +1,26 @@
+{
+  "mcpServers": {
+    "xcode": {
+      "type": "stdio",
+      "command": "/usr/bin/xcrun",
+      "args": [
+        "mcpbridge"
+      ],
+      "env": {}
+    },
+    "xcodeproj": {
+      "type": "stdio",
+      "command": "container",
+      "args": [
+        "run",
+        "--rm",
+        "-i",
+        "-v",
+        "/Users/giginet/work/Swift/XCMCPHub:/workspace",
+        "ghcr.io/giginet/xcodeproj-mcp-server:latest",
+        "/workspace"
+      ],
+      "env": {}
+    }
+  }
+}
