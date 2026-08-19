@@ -66,6 +66,11 @@ instead, so nothing is silently rewritten.
 is made of real files. The copy button in the bottom bar sends the selected skills to
 another agent, asking first if a folder of the same name is already there.
 
+## Privacy
+
+XCAgentHub collects nothing — no account, no analytics, no telemetry. See
+[PRIVACY.md](PRIVACY.md).
+
 ## License
 
 XCAgentHub is released under the Apache License 2.0. See [LICENSE](LICENSE).

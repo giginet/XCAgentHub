@@ -1,0 +1,7 @@
+{
+  "description": "XCAgentHub は、Xcode に組み込まれたコーディングエージェント（Claude Code、Codex、Gemini）の MCP サーバーとスキルを、1つのウィンドウから管理するアプリです。\n\nエージェントごとに設定ファイルの場所も形式も異なります（Claude Code と Gemini は JSON、Codex は TOML）。XCAgentHub は3つすべてを読み込んで並べて表示し、書き戻すときはそのエージェントの形式に従います。ファイル内の無関係な項目はそのまま保持されます。\n\nMCP サーバー\n• 標準入出力と HTTP のサーバーを追加・編集できます。\n• 削除せずに無効化できます。各エージェントが解釈する無効リストに退避されるため、再度有効にすれば元のまま戻ります。\n• HTTP サーバーは「接続をテスト」で確認できます。MCP の initialize ハンドシェイクを行い、応答したサーバー名を表示します。\n• 他のエージェントへコピーできます。コピー先の形式で書き出されます。\n\nスキル\n• 各エージェントが持つスキルを一覧できます。\n• YAML フロントマターをテキストではなくフォームで編集できます。name、description、allowed-tools には専用のフィールドがあり、それ以外は key/value の表で設定できます。\n• 既存の SKILL.md も同じフォームで編集できます。フォームで表現できない YAML を含むファイルは Markdown のまま編集する画面に切り替わるので、意図しない書き換えは起きません。\n• スキルフォルダの読み込みと、他のエージェントへのコピーに対応しています。\n\n書き込みの前には必ず対象ファイルのバックアップを取ります。\n\nXCAgentHub はオープンソースで、Apache License 2.0 のもとで公開されています。",
+  "keywords": "MCP,Claude Code,Codex,Gemini,エージェント,AI,開発ツール,スキル,設定",
+  "marketingUrl": "https://github.com/giginet/XCAgentHub",
+  "promotionalText": "Xcode のコーディングエージェントの MCP サーバーとスキルを、1つのウィンドウで管理。",
+  "supportUrl": "https://github.com/giginet/XCAgentHub/issues"
+}

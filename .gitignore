@@ -63,3 +63,10 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots/**/*.png
 fastlane/test_output
+
+# App Store Connect API keys. Never commit these.
+*.p8
+AuthKey_*.p8
+
+# asc CLI local state (may hold credentials).
+.asc/
