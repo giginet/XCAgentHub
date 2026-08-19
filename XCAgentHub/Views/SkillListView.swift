@@ -2,7 +2,8 @@ import AppKit
 import SwiftUI
 
 /// Lists the skills installed for one agent. Clicking selects,
-/// double-clicking (or right-click → Edit…) opens the SKILL.md editor.
+/// double-clicking (or right-click → Edit…) opens the SKILL.md editor, and
+/// the trash button in the bottom bar deletes the selection.
 struct SkillListView: View {
     @Environment(AgentHubViewModel.self) private var model
 
@@ -11,7 +12,7 @@ struct SkillListView: View {
     @State private var selectedSkillIDs = Set<Skill.ID>()
     @State private var isCreatingSkill = false
     @State private var editingSkill: Skill?
-    @State private var skillPendingDeletion: Skill?
+    @State private var skillsPendingDeletion: [Skill] = []
     @State private var actionError: String?
 
     var body: some View {
@@ -41,28 +42,7 @@ struct SkillListView: View {
                     }
                 }
             } else {
-                List(skills, selection: $selectedSkillIDs) { skill in
-                    // The VStack is load-bearing: a custom View struct as the
-                    // row root crashes macOS 27 beta's List (ViewListTree
-                    // assertion); wrapping it in a builtin container avoids it.
-                    VStack {
-                        SkillRowView(skill: skill)
-                    }
-                }
-                .contextMenu(forSelectionType: Skill.ID.self) { ids in
-                    if let id = ids.first {
-                        Button("Edit…") {
-                            editingSkill = skill(withID: id)
-                        }
-                        Button("Delete…", role: .destructive) {
-                            skillPendingDeletion = skill(withID: id)
-                        }
-                    }
-                } primaryAction: { ids in
-                    if let id = ids.first {
-                        editingSkill = skill(withID: id)
-                    }
-                }
+                skillList(skills)
             }
         }
         .navigationTitle("\(agent.displayName) Skills")
@@ -95,21 +75,14 @@ struct SkillListView: View {
             SkillEditorView(agent: agent, skill: skill)
         }
         .confirmationDialog(
-            "Delete \u{201C}\(skillPendingDeletion?.name ?? "")\u{201D}?",
+            deletionTitle,
             isPresented: Binding(
-                get: { skillPendingDeletion != nil },
-                set: { if !$0 { skillPendingDeletion = nil } }
+                get: { !skillsPendingDeletion.isEmpty },
+                set: { if !$0 { skillsPendingDeletion = [] } }
             )
         ) {
             Button("Delete", role: .destructive) {
-                if let skill = skillPendingDeletion {
-                    do {
-                        try model.deleteSkill(skill, for: agent)
-                    } catch {
-                        actionError = error.localizedDescription
-                    }
-                }
-                skillPendingDeletion = nil
+                deletePendingSkills()
             }
         } message: {
             Text("The skill folder and all of its files will be removed from \(agent.skillsDirectoryRelativePath).")
@@ -129,8 +102,89 @@ struct SkillListView: View {
         }
     }
 
+    private func skillList(_ skills: [Skill]) -> some View {
+        VStack(spacing: 0) {
+            List(skills, selection: $selectedSkillIDs) { skill in
+                // The VStack is load-bearing: a custom View struct as the row
+                // root crashes macOS 27 beta's List (ViewListTree assertion);
+                // wrapping it in a builtin container avoids it.
+                VStack {
+                    SkillRowView(skill: skill)
+                }
+            }
+            .contextMenu(forSelectionType: Skill.ID.self) { ids in
+                contextMenu(for: ids)
+            } primaryAction: { ids in
+                if let id = ids.first {
+                    editingSkill = skill(withID: id)
+                }
+            }
+
+            Divider()
+            bottomBar(skillCount: skills.count)
+        }
+    }
+
+    @ViewBuilder
+    private func contextMenu(for ids: Set<Skill.ID>) -> some View {
+        if let id = ids.first {
+            Button("Edit…") {
+                editingSkill = skill(withID: id)
+            }
+        }
+        if !ids.isEmpty {
+            Button("Delete…", role: .destructive) {
+                skillsPendingDeletion = skills(withIDs: ids)
+            }
+        }
+    }
+
+    /// Trash button plus the skill count, mirroring the bottom bar of a
+    /// macOS list editor.
+    private func bottomBar(skillCount: Int) -> some View {
+        HStack {
+            Button("Delete", systemImage: "trash") {
+                skillsPendingDeletion = skills(withIDs: selectedSkillIDs)
+            }
+            .buttonStyle(.borderless)
+            .labelStyle(.iconOnly)
+            .disabled(selectedSkillIDs.isEmpty)
+            .help(selectedSkillIDs.isEmpty ? "Select a skill to delete it" : "Delete the selected skills")
+            Spacer()
+            Text(skillCount == 1 ? "1 skill" : "\(skillCount) skills")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 6)
+    }
+
+    private var deletionTitle: String {
+        if skillsPendingDeletion.count == 1, let skill = skillsPendingDeletion.first {
+            return "Delete \u{201C}\(skill.name)\u{201D}?"
+        }
+        return "Delete \(skillsPendingDeletion.count) skills?"
+    }
+
+    /// Deletes each pending skill, keeping the first failure to show.
+    private func deletePendingSkills() {
+        for skill in skillsPendingDeletion {
+            do {
+                try model.deleteSkill(skill, for: agent)
+            } catch {
+                actionError = actionError ?? error.localizedDescription
+            }
+        }
+        selectedSkillIDs.subtract(skillsPendingDeletion.map(\.id))
+        skillsPendingDeletion = []
+    }
+
     private func skill(withID id: Skill.ID) -> Skill? {
         model.skills(for: agent).first { $0.id == id }
+    }
+
+    private func skills(withIDs ids: Set<Skill.ID>) -> [Skill] {
+        model.skills(for: agent).filter { ids.contains($0.id) }
     }
 
     /// Lets the user pick a folder containing SKILL.md and copies it into

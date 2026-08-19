@@ -2,7 +2,8 @@ import SwiftUI
 
 /// Lists the MCP servers configured for one agent, with add, edit, delete,
 /// and enable/disable controls. Clicking a row selects it; double-clicking
-/// (or right-click → Edit…) opens the edit sheet.
+/// (or right-click → Edit…) opens the edit sheet, and the trash button in
+/// the bottom bar deletes the selection.
 struct ServerListView: View {
     @Environment(AgentHubViewModel.self) private var model
 
@@ -11,7 +12,7 @@ struct ServerListView: View {
     @State private var selectedServerNames = Set<MCPServer.ID>()
     @State private var isAddingServer = false
     @State private var editingServer: MCPServer?
-    @State private var serverPendingDeletion: MCPServer?
+    @State private var serversPendingDeletion: [MCPServer] = []
 
     var body: some View {
         let servers = model.servers(for: agent)
@@ -41,33 +42,7 @@ struct ServerListView: View {
                     }
                 }
             } else {
-                List(servers, selection: $selectedServerNames) { server in
-                    // The VStack is load-bearing: a custom View struct as the
-                    // row root crashes macOS 27 beta's List (ViewListTree
-                    // assertion); wrapping it in a builtin container avoids it.
-                    VStack {
-                        ServerRowView(
-                            server: server,
-                            onToggle: { isEnabled in
-                                model.setEnabled(isEnabled, serverNamed: server.name, for: agent)
-                            }
-                        )
-                    }
-                }
-                .contextMenu(forSelectionType: MCPServer.ID.self) { names in
-                    if let name = names.first {
-                        Button("Edit…") {
-                            editServer(named: name)
-                        }
-                        Button("Delete…", role: .destructive) {
-                            serverPendingDeletion = server(named: name)
-                        }
-                    }
-                } primaryAction: { names in
-                    if let name = names.first {
-                        editServer(named: name)
-                    }
-                }
+                serverList(servers)
             }
         }
         .navigationTitle(agent.displayName)
@@ -93,25 +68,99 @@ struct ServerListView: View {
             ServerFormView(agent: agent, original: server)
         }
         .confirmationDialog(
-            "Delete \u{201C}\(serverPendingDeletion?.name ?? "")\u{201D}?",
+            deletionTitle,
             isPresented: Binding(
-                get: { serverPendingDeletion != nil },
-                set: { if !$0 { serverPendingDeletion = nil } }
+                get: { !serversPendingDeletion.isEmpty },
+                set: { if !$0 { serversPendingDeletion = [] } }
             )
         ) {
             Button("Delete", role: .destructive) {
-                if let server = serverPendingDeletion {
+                for server in serversPendingDeletion {
                     model.delete(server, for: agent)
                 }
-                serverPendingDeletion = nil
+                selectedServerNames.subtract(serversPendingDeletion.map(\.id))
+                serversPendingDeletion = []
             }
         } message: {
-            Text("The server will be removed from \(agent.configFileRelativePath). A backup of the file is kept.")
+            Text("Removed from \(agent.configFileRelativePath). A backup of the file is kept.")
         }
+    }
+
+    private func serverList(_ servers: [MCPServer]) -> some View {
+        VStack(spacing: 0) {
+            List(servers, selection: $selectedServerNames) { server in
+                // The VStack is load-bearing: a custom View struct as the row
+                // root crashes macOS 27 beta's List (ViewListTree assertion);
+                // wrapping it in a builtin container avoids it.
+                VStack {
+                    ServerRowView(
+                        server: server,
+                        onToggle: { isEnabled in
+                            model.setEnabled(isEnabled, serverNamed: server.name, for: agent)
+                        }
+                    )
+                }
+            }
+            .contextMenu(forSelectionType: MCPServer.ID.self) { names in
+                contextMenu(for: names)
+            } primaryAction: { names in
+                if let name = names.first {
+                    editServer(named: name)
+                }
+            }
+
+            Divider()
+            bottomBar(serverCount: servers.count)
+        }
+    }
+
+    @ViewBuilder
+    private func contextMenu(for names: Set<MCPServer.ID>) -> some View {
+        if let name = names.first {
+            Button("Edit…") {
+                editServer(named: name)
+            }
+        }
+        if !names.isEmpty {
+            Button("Delete…", role: .destructive) {
+                serversPendingDeletion = servers(withIDs: names)
+            }
+        }
+    }
+
+    /// Trash button plus the server count, mirroring the bottom bar of a
+    /// macOS list editor.
+    private func bottomBar(serverCount: Int) -> some View {
+        HStack {
+            Button("Delete", systemImage: "trash") {
+                serversPendingDeletion = servers(withIDs: selectedServerNames)
+            }
+            .buttonStyle(.borderless)
+            .labelStyle(.iconOnly)
+            .disabled(selectedServerNames.isEmpty)
+            .help(selectedServerNames.isEmpty ? "Select a server to delete it" : "Delete the selected servers")
+            Spacer()
+            Text(serverCount == 1 ? "1 server" : "\(serverCount) servers")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 6)
+    }
+
+    private var deletionTitle: String {
+        if serversPendingDeletion.count == 1, let server = serversPendingDeletion.first {
+            return "Delete \u{201C}\(server.name)\u{201D}?"
+        }
+        return "Delete \(serversPendingDeletion.count) servers?"
     }
 
     private func server(named name: String) -> MCPServer? {
         model.servers(for: agent).first { $0.name == name }
+    }
+
+    private func servers(withIDs ids: Set<MCPServer.ID>) -> [MCPServer] {
+        model.servers(for: agent).filter { ids.contains($0.id) }
     }
 
     private func editServer(named name: String) {
