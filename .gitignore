@@ -70,3 +70,9 @@ AuthKey_*.p8
 
 # asc CLI local state (may hold credentials).
 .asc/
+
+# Signing certificates. Never commit these.
+*.cer
+*.p12
+*.mobileprovision
+*.provisionprofile

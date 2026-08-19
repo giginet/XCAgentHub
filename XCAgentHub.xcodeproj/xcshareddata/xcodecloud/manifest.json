@@ -1,0 +1,9 @@
+{
+  "id" : "9446df0c-9b3d-4cef-a11b-08e1b8931747",
+  "targets" : [
+    {
+      "id" : "0039f91c-bc57-45bd-9048-e42e36ff603f",
+      "name" : "XCAgentHub"
+    }
+  ]
+}
