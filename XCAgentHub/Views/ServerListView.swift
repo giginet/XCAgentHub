@@ -127,12 +127,7 @@ struct ServerListView: View {
                 // root crashes macOS 27 beta's List (ViewListTree assertion);
                 // wrapping it in a builtin container avoids it.
                 VStack {
-                    ServerRowView(
-                        server: server,
-                        onToggle: { isEnabled in
-                            model.setEnabled(isEnabled, serverNamed: server.name, for: agent)
-                        }
-                    )
+                    ServerRowView(agent: agent, server: server)
                 }
             }
             .contextMenu(forSelectionType: MCPServer.ID.self) { names in
@@ -235,15 +230,22 @@ struct ServerListView: View {
 }
 
 /// A single row: enable toggle, name, and transport summary.
+///
+/// The row toggles the server itself rather than taking a callback. Handing
+/// a stored function to Binding's setter crashes Swift 6.3.2 in IRGen, on
+/// the thunk that reabstracts it for the setter's isolation.
 private struct ServerRowView: View {
+    @Environment(AgentHubViewModel.self) private var model
+
+    let agent: AgentKind
     let server: MCPServer
-    /// Isolated, because Binding's setter is Sendable under Swift 6 and this
-    /// one only ever runs from the main actor anyway.
-    let onToggle: @MainActor (Bool) -> Void
 
     var body: some View {
         HStack(spacing: 12) {
-            Toggle("Enabled", isOn: Binding(get: { server.isEnabled }, set: onToggle))
+            Toggle("Enabled", isOn: Binding(
+                get: { server.isEnabled },
+                set: { model.setEnabled($0, serverNamed: server.name, for: agent) }
+            ))
                 .toggleStyle(.switch)
                 .controlSize(.small)
                 .labelsHidden()
