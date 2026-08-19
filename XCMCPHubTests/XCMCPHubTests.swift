@@ -118,6 +118,110 @@ struct ClaudeConfigStoreTests {
 @MainActor
 @Suite("JSONAgentConfigStore (Gemini)")
 struct GeminiConfigStoreTests {
+    private let geminiFixture = """
+    {
+      "theme": "dark",
+      "mcpServers": {
+        "xcodeproj": {
+          "command": "/usr/local/bin/container",
+          "args": ["run"]
+        }
+      },
+      "mcp": {
+        "serverCommand": "custom-command",
+        "excluded": ["ext:other"]
+      }
+    }
+    """
+
+    @Test func disablingUsesNativeExcludedList() throws {
+        let directory = try makeTemporaryDirectory()
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let fileURL = directory.appending(path: "settings.json")
+        try geminiFixture.write(to: fileURL, atomically: true, encoding: .utf8)
+
+        let store = JSONAgentConfigStore(configFileURL: fileURL, dialect: .gemini)
+        var servers = try store.load()
+        #expect(servers.count == 1)
+        #expect(servers[0].isEnabled)
+
+        servers[0].isEnabled = false
+        try store.save(servers)
+
+        let data = try Data(contentsOf: fileURL)
+        let root = try #require(try JSONSerialization.jsonObject(with: data) as? [String: Any])
+        // The definition stays in mcpServers; only the name joins mcp.excluded.
+        let mcpServers = try #require(root["mcpServers"] as? [String: Any])
+        #expect(mcpServers["xcodeproj"] != nil)
+        let mcp = try #require(root["mcp"] as? [String: Any])
+        #expect(mcp["serverCommand"] as? String == "custom-command")
+        let excluded = try #require(mcp["excluded"] as? [String])
+        #expect(excluded.contains("xcodeproj"))
+        #expect(excluded.contains("ext:other"))
+        #expect(root["theme"] as? String == "dark")
+
+        let reloaded = try store.load()
+        #expect(reloaded.count == 1)
+        #expect(reloaded[0].isEnabled == false)
+
+        // Re-enabling removes only our entry from mcp.excluded.
+        var reenabled = reloaded
+        reenabled[0].isEnabled = true
+        try store.save(reenabled)
+        let root2 = try #require(
+            try JSONSerialization.jsonObject(with: Data(contentsOf: fileURL)) as? [String: Any]
+        )
+        let mcp2 = try #require(root2["mcp"] as? [String: Any])
+        #expect(mcp2["excluded"] as? [String] == ["ext:other"])
+        #expect(mcp2["serverCommand"] as? String == "custom-command")
+    }
+
+    @Test func loadMatchesExcludedNamesCaseInsensitively() throws {
+        let directory = try makeTemporaryDirectory()
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let fileURL = directory.appending(path: "settings.json")
+        let fixture = """
+        {
+          "mcpServers": { "XcodeProj": { "command": "x", "args": [] } },
+          "mcp": { "excluded": ["XCODEPROJ"] }
+        }
+        """
+        try fixture.write(to: fileURL, atomically: true, encoding: .utf8)
+
+        let store = JSONAgentConfigStore(configFileURL: fileURL, dialect: .gemini)
+        let servers = try store.load()
+        #expect(servers.count == 1)
+        #expect(servers[0].isEnabled == false)
+    }
+
+    @Test func saveMigratesLegacyDisabledStash() throws {
+        let directory = try makeTemporaryDirectory()
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let fileURL = directory.appending(path: "settings.json")
+        let fixture = """
+        {
+          "mcpServers": {},
+          "_disabledMcpServers": { "old": { "command": "x", "args": [] } }
+        }
+        """
+        try fixture.write(to: fileURL, atomically: true, encoding: .utf8)
+
+        let store = JSONAgentConfigStore(configFileURL: fileURL, dialect: .gemini)
+        let servers = try store.load()
+        #expect(servers.count == 1)
+        #expect(servers[0].isEnabled == false)
+
+        try store.save(servers)
+        let root = try #require(
+            try JSONSerialization.jsonObject(with: Data(contentsOf: fileURL)) as? [String: Any]
+        )
+        #expect(root["_disabledMcpServers"] == nil)
+        let mcpServers = try #require(root["mcpServers"] as? [String: Any])
+        #expect(mcpServers["old"] != nil)
+        let mcp = try #require(root["mcp"] as? [String: Any])
+        #expect(mcp["excluded"] as? [String] == ["old"])
+    }
+
     @Test func saveCreatesFileAndDirectory() throws {
         let directory = try makeTemporaryDirectory()
         defer { try? FileManager.default.removeItem(at: directory) }
@@ -144,6 +248,8 @@ struct GeminiConfigStoreTests {
         #expect(xcode["env"] == nil)
         let remote = try #require(mcpServers["remote"] as? [String: Any])
         #expect(remote["httpUrl"] as? String == "https://example.com/mcp")
+        // With every server enabled there is no mcp.excluded to write.
+        #expect(root["mcp"] == nil)
 
         let reloaded = try store.load()
         #expect(reloaded.count == 2)
