@@ -494,3 +494,65 @@ struct CodexConfigStoreTests {
         #expect(reloaded[0].transport == .http(url: "https://example.com/mcp"))
     }
 }
+
+@Suite("SkillFrontmatter")
+struct SkillFrontmatterTests {
+    @Test func rendersOnlyTheFieldsThatHaveValues() {
+        let frontmatter = SkillFrontmatter(name: "my-skill")
+
+        #expect(frontmatter.rendered() == """
+        ---
+        name: my-skill
+        ---
+        """)
+    }
+
+    @Test func rendersDescriptionAllowedToolsAndExtraFields() {
+        let frontmatter = SkillFrontmatter(
+            name: "my-skill",
+            summary: "Does a thing",
+            allowedTools: ["Bash", " Read ", ""],
+            extraFields: [(key: "license", value: "MIT")]
+        )
+
+        #expect(frontmatter.rendered() == """
+        ---
+        name: my-skill
+        description: Does a thing
+        allowed-tools: Bash, Read
+        license: MIT
+        ---
+        """)
+    }
+
+    @Test func skipsBlankAndReservedExtraKeys() {
+        let frontmatter = SkillFrontmatter(
+            name: "my-skill",
+            summary: "Does a thing",
+            extraFields: [
+                (key: "  ", value: "ignored"),
+                (key: "description", value: "duplicate"),
+                (key: "license", value: "MIT"),
+                (key: "license", value: "Apache-2.0"),
+            ]
+        )
+        let values = SkillStore.parseFrontmatter(frontmatter.rendered())
+
+        #expect(values["description"] == "Does a thing")
+        #expect(values["license"] == "MIT")
+        #expect(values.count == 3)
+    }
+
+    @Test func foldsMultiLineValuesAndQuotesAmbiguousOnes() {
+        let frontmatter = SkillFrontmatter(
+            name: "my-skill",
+            summary: "First line\nsecond line",
+            extraFields: [(key: "note", value: "key: value")]
+        )
+        let rendered = frontmatter.rendered()
+
+        #expect(rendered.contains("description: First line second line"))
+        #expect(rendered.contains("note: \"key: value\""))
+        #expect(SkillStore.parseFrontmatter(rendered)["note"] == "key: value")
+    }
+}

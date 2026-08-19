@@ -1,44 +1,28 @@
 import SwiftUI
 
-/// Sheet for creating a new skill or editing an existing skill's SKILL.md.
+/// Sheet for editing an existing skill's SKILL.md as raw Markdown. New
+/// skills are composed with `SkillCreatorView` instead.
 struct SkillEditorView: View {
     @Environment(AgentHubViewModel.self) private var model
     @Environment(\.dismiss) private var dismiss
 
     let agent: AgentKind
-    /// nil creates a new skill; otherwise this skill's SKILL.md is edited.
-    let skill: Skill?
+    let skill: Skill
 
-    @State private var name: String
-    @State private var content: String
+    @State private var content = ""
     @State private var errorMessage: String?
     @State private var didLoad = false
-
-    init(agent: AgentKind, skill: Skill?) {
-        self.agent = agent
-        self.skill = skill
-        _name = State(initialValue: "")
-        _content = State(initialValue: "")
-    }
 
     var body: some View {
         VStack(spacing: 0) {
             VStack(alignment: .leading, spacing: 8) {
-                if let skill {
-                    Text(skill.name)
-                        .font(.headline)
-                    Text(skill.skillFileURL.path)
-                        .font(.caption.monospaced())
-                        .foregroundStyle(.secondary)
-                        .lineLimit(1)
-                        .truncationMode(.middle)
-                } else {
-                    TextField("Name", text: $name, prompt: Text("my-skill"))
-                        .font(.body.monospaced())
-                    Text("Created as \(agent.skillsDirectoryRelativePath)/\(SkillStore.sanitizeDirectoryName(name).isEmpty ? "…" : SkillStore.sanitizeDirectoryName(name))/SKILL.md. A name frontmatter is added when the body has none.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
+                Text(skill.name)
+                    .font(.headline)
+                Text(skill.skillFileURL.path)
+                    .font(.caption.monospaced())
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+                    .truncationMode(.middle)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(12)
@@ -62,16 +46,15 @@ struct SkillEditorView: View {
                     dismiss()
                 }
                 .keyboardShortcut(.cancelAction)
-                Button(skill == nil ? "Create" : "Save") {
+                Button("Save") {
                     save()
                 }
                 .buttonStyle(.borderedProminent)
                 .keyboardShortcut(.defaultAction)
-                .disabled(skill == nil && SkillStore.sanitizeDirectoryName(name).isEmpty)
             }
             .padding(12)
         }
-        .navigationTitle(skill == nil ? "New Skill" : "Edit Skill")
+        .navigationTitle("Edit Skill")
         .frame(width: 640, height: 520)
         .task {
             loadContentIfNeeded()
@@ -81,7 +64,6 @@ struct SkillEditorView: View {
     private func loadContentIfNeeded() {
         guard !didLoad else { return }
         didLoad = true
-        guard let skill else { return }
         do {
             content = try model.readSkillContent(of: skill, for: agent)
         } catch {
@@ -91,11 +73,7 @@ struct SkillEditorView: View {
 
     private func save() {
         do {
-            if let skill {
-                try model.saveSkill(content: content, to: skill, for: agent)
-            } else {
-                try model.createSkill(named: name, content: content, for: agent)
-            }
+            try model.saveSkill(content: content, to: skill, for: agent)
             dismiss()
         } catch {
             errorMessage = error.localizedDescription
@@ -103,12 +81,7 @@ struct SkillEditorView: View {
     }
 }
 
-#Preview("New") {
-    SkillEditorView(agent: .claudeCode, skill: nil)
-        .environment(AgentHubViewModel.preview)
-}
-
-#Preview("Edit") {
+#Preview {
     SkillEditorView(
         agent: .claudeCode,
         skill: Skill(

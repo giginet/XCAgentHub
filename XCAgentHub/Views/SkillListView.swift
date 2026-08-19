@@ -89,7 +89,7 @@ struct SkillListView: View {
             }
         }
         .sheet(isPresented: $isCreatingSkill) {
-            SkillEditorView(agent: agent, skill: nil)
+            SkillCreatorView(agent: agent)
         }
         .sheet(item: $editingSkill) { skill in
             SkillEditorView(agent: agent, skill: skill)
@@ -140,6 +140,9 @@ struct SkillListView: View {
         panel.canChooseFiles = false
         panel.canChooseDirectories = true
         panel.allowsMultipleSelection = false
+        // Skills usually live under dot-directories such as ~/.claude/skills,
+        // so start with hidden files visible.
+        panel.showsHiddenFiles = true
         panel.message = "Select a skill folder that contains SKILL.md. The folder will be copied into \(agent.skillsDirectoryRelativePath)."
         panel.prompt = "Import"
         guard panel.runModal() == .OK, let url = panel.url else { return }
