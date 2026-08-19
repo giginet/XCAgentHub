@@ -257,6 +257,137 @@ struct GeminiConfigStoreTests {
 }
 
 @MainActor
+@Suite("SkillStore")
+struct SkillStoreTests {
+    private func makeStore(in directory: URL) -> SkillStore {
+        SkillStore(skillsDirectoryURL: directory.appending(path: "skills"), agent: .claudeCode)
+    }
+
+    private func writeSkill(named name: String, content: String, in skillsDirectory: URL) throws {
+        let dir = skillsDirectory.appending(path: name)
+        try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        try content.write(to: dir.appending(path: "SKILL.md"), atomically: true, encoding: .utf8)
+    }
+
+    @Test func listSkipsHiddenAndInvalidDirectories() throws {
+        let directory = try makeTemporaryDirectory()
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let store = makeStore(in: directory)
+        let skillsDir = store.skillsDirectoryURL
+
+        try writeSkill(named: "good-skill", content: """
+        ---
+        name: good-skill
+        description: "Does good things"
+        ---
+
+        # Body
+        """, in: skillsDir)
+        // Hidden directory (like Codex's .system) must be skipped.
+        try writeSkill(named: ".system", content: "---\nname: sys\n---\n", in: skillsDir)
+        // A directory without SKILL.md must be skipped.
+        try FileManager.default.createDirectory(
+            at: skillsDir.appending(path: "not-a-skill"),
+            withIntermediateDirectories: true
+        )
+        // A plain file must be skipped.
+        try "hi".write(to: skillsDir.appending(path: "note.txt"), atomically: true, encoding: .utf8)
+
+        let skills = try store.list()
+        #expect(skills.count == 1)
+        let skill = try #require(skills.first)
+        #expect(skill.name == "good-skill")
+        #expect(skill.summary == "Does good things")
+        #expect(skill.directoryName == "good-skill")
+    }
+
+    @Test func listReturnsEmptyForMissingDirectory() throws {
+        let directory = try makeTemporaryDirectory()
+        defer { try? FileManager.default.removeItem(at: directory) }
+        #expect(try makeStore(in: directory).list().isEmpty)
+    }
+
+    @Test func createSanitizesNameAndAddsFrontmatter() throws {
+        let directory = try makeTemporaryDirectory()
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let store = makeStore(in: directory)
+
+        let skill = try store.create(named: "My Cool Skill", content: "Do the thing.")
+        #expect(skill.directoryName == "my-cool-skill")
+        let written = try String(contentsOf: skill.skillFileURL, encoding: .utf8)
+        #expect(written.hasPrefix("---\nname: my-cool-skill\n---"))
+        #expect(written.contains("Do the thing."))
+
+        // Creating the same skill again fails.
+        #expect(throws: SkillStoreError.self) {
+            try store.create(named: "my cool skill", content: "again")
+        }
+        // An unusable name fails.
+        #expect(throws: SkillStoreError.self) {
+            try store.create(named: "!!!", content: "x")
+        }
+    }
+
+    @Test func createKeepsExistingFrontmatter() throws {
+        let directory = try makeTemporaryDirectory()
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let store = makeStore(in: directory)
+
+        let original = "---\nname: custom\ndescription: mine\n---\n\nBody"
+        let skill = try store.create(named: "custom", content: original)
+        #expect(try String(contentsOf: skill.skillFileURL, encoding: .utf8) == original)
+        #expect(skill.name == "custom")
+        #expect(skill.summary == "mine")
+    }
+
+    @Test func importCopiesWholeDirectory() throws {
+        let directory = try makeTemporaryDirectory()
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let store = makeStore(in: directory)
+
+        // Source skill with a nested asset.
+        let source = directory.appending(path: "source/tool-skill")
+        try FileManager.default.createDirectory(
+            at: source.appending(path: "assets"),
+            withIntermediateDirectories: true
+        )
+        try "---\nname: tool-skill\n---\n".write(
+            to: source.appending(path: "SKILL.md"), atomically: true, encoding: .utf8)
+        try "asset".write(
+            to: source.appending(path: "assets/data.txt"), atomically: true, encoding: .utf8)
+
+        let skill = try store.importSkill(from: source)
+        #expect(skill.directoryName == "tool-skill")
+        #expect(FileManager.default.fileExists(
+            atPath: store.skillsDirectoryURL.appending(path: "tool-skill/assets/data.txt").path))
+
+        // Importing the same folder again fails.
+        #expect(throws: SkillStoreError.self) {
+            try store.importSkill(from: source)
+        }
+        // A folder without SKILL.md fails.
+        let empty = directory.appending(path: "source/empty")
+        try FileManager.default.createDirectory(at: empty, withIntermediateDirectories: true)
+        #expect(throws: SkillStoreError.self) {
+            try store.importSkill(from: empty)
+        }
+    }
+
+    @Test func saveOverwritesAndDeleteRemoves() throws {
+        let directory = try makeTemporaryDirectory()
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let store = makeStore(in: directory)
+
+        let skill = try store.create(named: "editable", content: "v1")
+        try store.save(content: "v2 content", to: skill)
+        #expect(try store.readContent(of: skill) == "v2 content")
+
+        try store.delete(skill)
+        #expect(try store.list().isEmpty)
+    }
+}
+
+@MainActor
 @Suite("ConnectionTester")
 struct ConnectionTesterTests {
     @Test func unreachableServerFails() async {

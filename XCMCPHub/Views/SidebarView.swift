@@ -1,26 +1,32 @@
 import SwiftUI
 
-/// Sidebar listing the supported coding agents with their server counts.
+/// Sidebar with one section per agent, each offering its MCP servers and
+/// its skills.
 struct SidebarView: View {
     @Environment(MCPHubViewModel.self) private var model
 
     var body: some View {
         @Bindable var model = model
-        List(AgentKind.allCases, selection: $model.selectedAgent) { agent in
-            Label {
-                Text(agent.displayName)
-            } icon: {
-                Image(systemName: agent.systemImage)
+        List(selection: $model.selection) {
+            ForEach(AgentKind.allCases) { agent in
+                Section {
+                    Label("MCP Servers", systemImage: "server.rack")
+                        .badge(serverBadge(for: agent))
+                        .tag(SidebarItem.servers(agent))
+                    Label("Skills", systemImage: "text.book.closed")
+                        .badge(Text("\(model.skills(for: agent).count)"))
+                        .tag(SidebarItem.skills(agent))
+                } header: {
+                    Label(agent.displayName, systemImage: agent.systemImage)
+                }
             }
-            .badge(badge(for: agent))
-            .tag(agent)
         }
         .listStyle(.sidebar)
         .navigationTitle("XCMCPHub")
-        .navigationSplitViewColumnWidth(min: 180, ideal: 200)
+        .navigationSplitViewColumnWidth(min: 190, ideal: 210)
     }
 
-    private func badge(for agent: AgentKind) -> Text? {
+    private func serverBadge(for agent: AgentKind) -> Text? {
         if model.loadError(for: agent) != nil {
             return Text(Image(systemName: "exclamationmark.triangle"))
         }
@@ -38,5 +44,5 @@ struct SidebarView: View {
         Text("Detail")
     }
     .environment(MCPHubViewModel.preview)
-    .frame(width: 640, height: 420)
+    .frame(width: 680, height: 480)
 }

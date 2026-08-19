@@ -10,13 +10,16 @@ struct ContentView: View {
                 NavigationSplitView {
                     SidebarView()
                 } detail: {
-                    if let agent = model.selectedAgent {
+                    switch model.selection {
+                    case .servers(let agent):
                         ServerListView(agent: agent)
-                    } else {
+                    case .skills(let agent):
+                        SkillListView(agent: agent)
+                    case nil:
                         ContentUnavailableView(
-                            "Select an Agent",
+                            "Select an Item",
                             systemImage: "sidebar.left",
-                            description: Text("Choose a coding agent in the sidebar to manage its MCP servers.")
+                            description: Text("Choose an agent's MCP servers or skills in the sidebar.")
                         )
                     }
                 }
@@ -32,7 +35,7 @@ struct ContentView: View {
                 model.reloadAll()
             }
         }
-        .frame(minWidth: 640, minHeight: 400)
+        .frame(minWidth: 680, minHeight: 420)
     }
 }
 

@@ -1,23 +1,33 @@
 import Foundation
 import Observation
 
-/// App-wide state: which agent is selected and the MCP servers loaded from
-/// each agent's config file. Every mutation backs up the target file first,
-/// writes it, then reloads from disk.
+/// What the sidebar can select: one feature of one agent.
+enum SidebarItem: Hashable {
+    case servers(AgentKind)
+    case skills(AgentKind)
+}
+
+/// App-wide state: the sidebar selection plus the MCP servers and skills
+/// loaded for each agent. Every config mutation backs up the target file
+/// first, writes it, then reloads from disk.
 @Observable
 final class MCPHubViewModel {
     let access: ConfigAccessManager
 
-    var selectedAgent: AgentKind? = .claudeCode
+    var selection: SidebarItem? = .servers(.claudeCode)
     private(set) var serversByAgent: [AgentKind: [MCPServer]] = [:]
     private(set) var errorsByAgent: [AgentKind: String] = [:]
+    private(set) var skillsByAgent: [AgentKind: [Skill]] = [:]
+    private(set) var skillErrorsByAgent: [AgentKind: String] = [:]
 
     init(
         access: ConfigAccessManager = ConfigAccessManager(),
-        initialServers: [AgentKind: [MCPServer]] = [:]
+        initialServers: [AgentKind: [MCPServer]] = [:],
+        initialSkills: [AgentKind: [Skill]] = [:]
     ) {
         self.access = access
         self.serversByAgent = initialServers
+        self.skillsByAgent = initialSkills
     }
 
     /// Sample data for SwiftUI previews.
@@ -46,6 +56,21 @@ final class MCPHubViewModel {
                     isEnabled: true
                 )
             ],
+        ], initialSkills: [
+            .claudeCode: [
+                Skill(
+                    directoryName: "compose-app-icon",
+                    name: "compose-app-icon",
+                    summary: "Author and validate Apple Icon Composer .icon packages",
+                    directoryURL: URL(filePath: "/tmp/skills/compose-app-icon")
+                ),
+                Skill(
+                    directoryName: "modernize-tests",
+                    name: "modernize-tests",
+                    summary: "Migrate test suites to Swift Testing",
+                    directoryURL: URL(filePath: "/tmp/skills/modernize-tests")
+                ),
+            ]
         ])
     }
 
@@ -69,6 +94,7 @@ final class MCPHubViewModel {
     func reloadAll() {
         for agent in AgentKind.allCases {
             reload(agent)
+            reloadSkills(agent)
         }
     }
 
@@ -118,5 +144,55 @@ final class MCPHubViewModel {
             errorsByAgent[agent] = error.localizedDescription
         }
         reload(agent)
+    }
+
+    // MARK: - Skills
+
+    func skills(for agent: AgentKind) -> [Skill] {
+        skillsByAgent[agent] ?? []
+    }
+
+    func skillLoadError(for agent: AgentKind) -> String? {
+        skillErrorsByAgent[agent]
+    }
+
+    func reloadSkills(_ agent: AgentKind) {
+        guard let root = access.rootDirectoryURL else { return }
+        do {
+            skillsByAgent[agent] = try agent.makeSkillStore(rootDirectory: root).list()
+            skillErrorsByAgent[agent] = nil
+        } catch {
+            skillsByAgent[agent] = []
+            skillErrorsByAgent[agent] = error.localizedDescription
+        }
+    }
+
+    func readSkillContent(of skill: Skill, for agent: AgentKind) throws -> String {
+        guard let root = access.rootDirectoryURL else { return "" }
+        return try agent.makeSkillStore(rootDirectory: root).readContent(of: skill)
+    }
+
+    func saveSkill(content: String, to skill: Skill, for agent: AgentKind) throws {
+        guard let root = access.rootDirectoryURL else { return }
+        try agent.makeSkillStore(rootDirectory: root).save(content: content, to: skill)
+        reloadSkills(agent)
+    }
+
+    func createSkill(named name: String, content: String, for agent: AgentKind) throws {
+        guard let root = access.rootDirectoryURL else { return }
+        try agent.makeSkillStore(rootDirectory: root).create(named: name, content: content)
+        reloadSkills(agent)
+    }
+
+    func importSkill(from sourceDirectory: URL, for agent: AgentKind) throws {
+        guard let root = access.rootDirectoryURL else { return }
+        try agent.makeSkillStore(rootDirectory: root).importSkill(from: sourceDirectory)
+        reloadSkills(agent)
+    }
+
+    func deleteSkill(_ skill: Skill, for agent: AgentKind) throws {
+        guard let root = access.rootDirectoryURL else { return }
+        try agent.makeSkillStore(rootDirectory: root).delete(skill)
+        reloadSkills(agent)
     }
 }

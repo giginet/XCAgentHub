@@ -37,6 +37,24 @@ enum AgentKind: String, CaseIterable, Identifiable, Sendable {
         rootDirectory.appending(path: configFileRelativePath)
     }
 
+    /// Path of the agent's skills folder relative to the CodingAssistant
+    /// folder. All three agents use the same `skills/<name>/SKILL.md` layout.
+    var skillsDirectoryRelativePath: String {
+        switch self {
+        case .claudeCode: return "ClaudeAgentConfig/skills"
+        case .codex: return "codex/skills"
+        case .gemini: return "gemini/skills"
+        }
+    }
+
+    func skillsDirectoryURL(in rootDirectory: URL) -> URL {
+        rootDirectory.appending(path: skillsDirectoryRelativePath)
+    }
+
+    func makeSkillStore(rootDirectory: URL) -> SkillStore {
+        SkillStore(skillsDirectoryURL: skillsDirectoryURL(in: rootDirectory), agent: self)
+    }
+
     func makeStore(rootDirectory: URL) -> any AgentConfigStore {
         let url = configFileURL(in: rootDirectory)
         switch self {
