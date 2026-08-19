@@ -55,41 +55,6 @@ instead, so nothing is silently rewritten.
 is made of real files. The copy button in the bottom bar sends the selected skills to
 another agent, asking first if a folder of the same name is already there.
 
-## Requirements
-
-- macOS 26 or later
-- Xcode 27 to build
-
-## Building
-
-```sh
-xcodebuild -project XCAgentHub.xcodeproj -scheme XCAgentHub -destination 'platform=macOS' build
-xcodebuild -project XCAgentHub.xcodeproj -scheme XCAgentHub -destination 'platform=macOS' test
-```
-
-## First run
-
-The app is sandboxed, so it asks once for access to the CodingAssistant folder and
-keeps the grant as a security-scoped bookmark.
-
-That grant covers the folder you pick and nothing else, which matters for skills kept
-in a dotfiles repository: if a `SKILL.md` is a symlink pointing outside the folder,
-macOS refuses the read and the import fails. Import the folder the link points into
-instead — the app names it in the error.
-
-## Localization
-
-English and Japanese, through a String Catalog.
-
-## Dependencies
-
-- [swift-toml](https://github.com/mattt/swift-toml) — reads and writes Codex's
-  `config.toml` without disturbing the rest of the file
-- [Milepost](https://github.com/giginet/Milepost) — records the commit at build time
-  for the About window
-
-Their licenses are bundled and shown under **XCAgentHub → Open Source Licenses**.
-
 ## License
 
 XCAgentHub is released under the Apache License 2.0. See [LICENSE](LICENSE).
