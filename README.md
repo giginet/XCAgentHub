@@ -6,7 +6,7 @@
 
 [![macOS](https://img.shields.io/badge/macOS-26%2B-white?logo=apple&logoColor=white)](https://developer.apple.com/macos/)
 [![Swift](https://img.shields.io/badge/Swift-6.3-orange?logo=swift&logoColor=white)](https://swift.org/)
-[![Xcode](https://img.shields.io/badge/Xcode-26.5-blue?logo=xcode&logoColor=white)](https://developer.apple.com/xcode/)
+[![Xcode](https://img.shields.io/badge/Xcode-26.4%2B-blue?logo=xcode&logoColor=white)](https://developer.apple.com/xcode/)
 [![CI](https://github.com/giginet/XCAgentHub/actions/workflows/test.yml/badge.svg)](https://github.com/giginet/XCAgentHub/actions/workflows/test.yml)
 [![License](https://img.shields.io/badge/License-Apache%202.0-green)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/giginet/XCAgentHub)](https://github.com/giginet/XCAgentHub/releases/latest)
