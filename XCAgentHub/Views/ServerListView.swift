@@ -237,7 +237,9 @@ struct ServerListView: View {
 /// A single row: enable toggle, name, and transport summary.
 private struct ServerRowView: View {
     let server: MCPServer
-    let onToggle: (Bool) -> Void
+    /// Isolated, because Binding's setter is Sendable under Swift 6 and this
+    /// one only ever runs from the main actor anyway.
+    let onToggle: @MainActor (Bool) -> Void
 
     var body: some View {
         HStack(spacing: 12) {

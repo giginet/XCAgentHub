@@ -10,7 +10,6 @@ private func makeTemporaryDirectory() throws -> URL {
     return url
 }
 
-@MainActor
 @Suite("JSONAgentConfigStore (Claude)")
 struct ClaudeConfigStoreTests {
     private let claudeFixture = """
@@ -115,7 +114,6 @@ struct ClaudeConfigStoreTests {
     }
 }
 
-@MainActor
 @Suite("JSONAgentConfigStore (Gemini)")
 struct GeminiConfigStoreTests {
     private let geminiFixture = """
@@ -256,7 +254,6 @@ struct GeminiConfigStoreTests {
     }
 }
 
-@MainActor
 @Suite("SkillStore")
 struct SkillStoreTests {
     private func makeStore(in directory: URL) -> SkillStore {
@@ -495,7 +492,6 @@ struct SkillStoreTests {
     }
 }
 
-@MainActor
 @Suite("SkillFrontmatter.parse")
 struct SkillFrontmatterParseTests {
     @Test func splitsFrontmatterFromBody() throws {
@@ -646,7 +642,6 @@ struct ConnectionTesterTests {
     }
 }
 
-@MainActor
 @Suite("CodexConfigStore")
 struct CodexConfigStoreTests {
     private let codexFixture = """
