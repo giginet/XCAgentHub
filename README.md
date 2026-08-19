@@ -1,0 +1,86 @@
+# XCAgentHub
+
+A macOS app for managing the MCP servers and skills of the coding agents that run inside Xcode.
+
+Xcode keeps each agent's configuration in its own file, in its own format, under
+`~/Library/Developer/Xcode/CodingAssistant`. XCAgentHub puts all three in one window
+and writes each file in the format that agent expects.
+
+![MCP server list](screenshots/1-list-mcp.png)
+
+## What it manages
+
+| Agent | MCP servers | Skills |
+| --- | --- | --- |
+| Claude Code | `ClaudeAgentConfig/.claude.json` | `ClaudeAgentConfig/skills` |
+| Codex | `codex/config.toml` | `codex/skills` |
+| Gemini | `gemini/settings.json` | `gemini/skills` |
+
+Pick an agent in the sidebar; the segmented control switches between its MCP servers
+and its skills.
+
+## MCP servers
+
+Add stdio and HTTP servers, edit them, and toggle one off without deleting it — the
+server is stashed in whichever disabled list that agent understands, so turning it
+back on restores it as it was. HTTP servers can be checked with **Test Connection**,
+which performs an MCP `initialize` handshake and reports the server name it answers
+with.
+
+Every write backs up the configuration file first, and unrelated keys in the file are
+preserved.
+
+![Editing an MCP server](screenshots/2-edit-mcp.png)
+
+## Skills
+
+A skill is a folder holding a `SKILL.md` with YAML frontmatter. XCAgentHub lists what
+each agent has, and creates or edits one through a form rather than a text editor:
+dedicated fields for `name`, `description`, and `allowed-tools`, a key/value table for
+anything else, and the Markdown body underneath.
+
+![Skill list](screenshots/3-list-skills.png)
+
+Existing files are parsed back into the same form. A `SKILL.md` carrying YAML the form
+cannot represent — a comment, a block scalar, a nested map — opens as raw Markdown
+instead, so nothing is silently rewritten.
+
+![Editing a skill](screenshots/4-edit-skill.png)
+
+**Add from Folder…** copies a skill folder in, following symlinks so the imported copy
+is made of real files.
+
+## Requirements
+
+- macOS 26 or later
+- Xcode 27 to build
+
+## Building
+
+```sh
+xcodebuild -project XCAgentHub.xcodeproj -scheme XCAgentHub -destination 'platform=macOS' build
+xcodebuild -project XCAgentHub.xcodeproj -scheme XCAgentHub -destination 'platform=macOS' test
+```
+
+## First run
+
+The app is sandboxed, so it asks once for access to the CodingAssistant folder and
+keeps the grant as a security-scoped bookmark.
+
+That grant covers the folder you pick and nothing else, which matters for skills kept
+in a dotfiles repository: if a `SKILL.md` is a symlink pointing outside the folder,
+macOS refuses the read and the import fails. Import the folder the link points into
+instead — the app names it in the error.
+
+## Localization
+
+English and Japanese, through a String Catalog.
+
+## Dependencies
+
+- [swift-toml](https://github.com/mattt/swift-toml) — reads and writes Codex's
+  `config.toml` without disturbing the rest of the file
+- [Milepost](https://github.com/giginet/Milepost) — records the commit at build time
+  for the About window
+
+Their licenses are bundled and shown under **XCAgentHub → Open Source Licenses**.
