@@ -2,8 +2,8 @@ import SwiftUI
 
 /// Lists the MCP servers configured for one agent, with add, edit, delete,
 /// and enable/disable controls. Clicking a row selects it; double-clicking
-/// (or right-click → Edit…) opens the edit sheet, and the trash button in
-/// the bottom bar deletes the selection.
+/// (or right-click → Edit…) opens the edit sheet. The bottom bar deletes
+/// the selection or copies it to another agent.
 struct ServerListView: View {
     @Environment(AgentHubViewModel.self) private var model
 
@@ -13,6 +13,16 @@ struct ServerListView: View {
     @State private var isAddingServer = false
     @State private var editingServer: MCPServer?
     @State private var serversPendingDeletion: [MCPServer] = []
+    @State private var pendingCopy: PendingCopy?
+
+    /// A copy waiting on the user, because the target agent already has
+    /// servers with these names.
+    private struct PendingCopy: Identifiable {
+        let id = UUID()
+        var target: AgentKind
+        var servers: [MCPServer]
+        var conflicts: [String]
+    }
 
     var body: some View {
         let servers = model.servers(for: agent)
@@ -93,6 +103,21 @@ struct ServerListView: View {
         } message: {
             Text("Removed from \(agent.configFileRelativePath). A backup of the file is kept.")
         }
+        .confirmationDialog(
+            Text("Replace \(pendingCopy?.conflicts.count ?? 0) servers in \(pendingCopy?.target.displayName ?? "")?"),
+            isPresented: Binding(
+                get: { pendingCopy != nil },
+                set: { if !$0 { pendingCopy = nil } }
+            ),
+            presenting: pendingCopy
+        ) { copy in
+            Button("Replace", role: .destructive) {
+                model.copy(copy.servers, to: copy.target)
+                pendingCopy = nil
+            }
+        } message: { copy in
+            Text("\(copy.conflicts.joined(separator: ", ")) already exist there. A backup of the file is kept.")
+        }
     }
 
     private func serverList(_ servers: [MCPServer]) -> some View {
@@ -148,6 +173,7 @@ struct ServerListView: View {
             .labelStyle(.iconOnly)
             .disabled(selectedServerNames.isEmpty)
             .help(selectedServerNames.isEmpty ? Text("Select a server to delete it") : Text("Delete the selected servers"))
+            copyMenu
             Spacer()
             Text("\(serverCount) servers")
                 .font(.caption)
@@ -155,6 +181,37 @@ struct ServerListView: View {
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 6)
+    }
+
+    /// Copies the selection into another agent's configuration.
+    private var copyMenu: some View {
+        Menu {
+            ForEach(AgentKind.allCases.filter { $0 != agent }) { target in
+                Button(target.displayName) {
+                    copy(to: target)
+                }
+            }
+        } label: {
+            Label("Copy to Another Agent", systemImage: "document.on.document")
+        }
+        .menuStyle(.borderlessButton)
+        .menuIndicator(.hidden)
+        .labelStyle(.iconOnly)
+        .fixedSize()
+        .disabled(selectedServerNames.isEmpty)
+        .help(selectedServerNames.isEmpty ? Text("Select a server to copy it") : Text("Copy the selected servers to another agent"))
+    }
+
+    /// Copies straight away unless the target already has a server of the
+    /// same name, which is worth asking about before overwriting.
+    private func copy(to target: AgentKind) {
+        let selected = servers(withIDs: selectedServerNames)
+        let conflicts = model.conflictingServerNames(selected, in: target)
+        guard !conflicts.isEmpty else {
+            model.copy(selected, to: target)
+            return
+        }
+        pendingCopy = PendingCopy(target: target, servers: selected, conflicts: conflicts)
     }
 
     private var deletionTitle: Text {

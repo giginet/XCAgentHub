@@ -30,6 +30,10 @@ with.
 Every write backs up the configuration file first, and unrelated keys in the file are
 preserved.
 
+The copy button in the bottom bar sends the selected servers to another agent, written
+in that agent's own format. If the target already has a server of the same name, it
+asks before replacing it.
+
 ![Editing an MCP server](screenshots/2-edit-mcp.png)
 
 ## Skills
@@ -48,7 +52,8 @@ instead, so nothing is silently rewritten.
 ![Editing a skill](screenshots/4-edit-skill.png)
 
 **Add from Folder…** copies a skill folder in, following symlinks so the imported copy
-is made of real files.
+is made of real files. The copy button in the bottom bar sends the selected skills to
+another agent, asking first if a folder of the same name is already there.
 
 ## Requirements
 

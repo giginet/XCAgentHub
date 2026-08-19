@@ -160,6 +160,42 @@ final class AgentHubViewModel {
         reload(agent)
     }
 
+    // MARK: - Copying to another agent
+
+    /// Names the target agent already uses, so the caller can ask before
+    /// overwriting them.
+    func conflictingServerNames(_ servers: [MCPServer], in target: AgentKind) -> [String] {
+        let existing = Set(self.servers(for: target).map(\.name))
+        return servers.map(\.name).filter(existing.contains)
+    }
+
+    /// Copies servers into another agent's configuration, replacing any of
+    /// the same name. Written in one go, so the file is backed up once.
+    func copy(_ servers: [MCPServer], to target: AgentKind) {
+        var destination = self.servers(for: target)
+        for server in servers {
+            destination.removeAll { $0.name == server.name }
+            destination.append(server)
+        }
+        persist(destination, for: target)
+    }
+
+    func conflictingSkillNames(_ skills: [Skill], in target: AgentKind) -> [String] {
+        let existing = Set(self.skills(for: target).map(\.directoryName))
+        return skills.map(\.directoryName).filter(existing.contains)
+    }
+
+    /// Copies skill folders into another agent's skills folder, replacing
+    /// any of the same name.
+    func copy(_ skills: [Skill], to target: AgentKind) throws {
+        guard let root = access.rootDirectoryURL else { return }
+        let store = target.makeSkillStore(rootDirectory: root)
+        for skill in skills {
+            try store.replaceSkill(from: skill.directoryURL)
+        }
+        reloadSkills(target)
+    }
+
     // MARK: - Skills
 
     func skills(for agent: AgentKind) -> [Skill] {

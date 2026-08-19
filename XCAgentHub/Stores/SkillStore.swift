@@ -165,6 +165,17 @@ struct SkillStore {
         }
     }
 
+    /// Copies a skill folder in, replacing one of the same name. Used when
+    /// copying a skill to another agent that already has it.
+    @discardableResult
+    func replaceSkill(from sourceDirectory: URL) throws -> Skill {
+        let destination = skillsDirectoryURL.appending(path: sourceDirectory.lastPathComponent)
+        if FileManager.default.fileExists(atPath: destination.path) {
+            try FileManager.default.removeItem(at: destination)
+        }
+        return try importSkill(from: sourceDirectory)
+    }
+
     func delete(_ skill: Skill) throws {
         try FileManager.default.removeItem(at: skill.directoryURL)
     }

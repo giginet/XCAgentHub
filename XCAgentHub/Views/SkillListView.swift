@@ -2,8 +2,8 @@ import AppKit
 import SwiftUI
 
 /// Lists the skills installed for one agent. Clicking selects,
-/// double-clicking (or right-click → Edit…) opens the SKILL.md editor, and
-/// the trash button in the bottom bar deletes the selection.
+/// double-clicking (or right-click → Edit…) opens the SKILL.md editor. The
+/// bottom bar deletes the selection or copies it to another agent.
 struct SkillListView: View {
     @Environment(AgentHubViewModel.self) private var model
 
@@ -13,6 +13,16 @@ struct SkillListView: View {
     @State private var isCreatingSkill = false
     @State private var editingSkill: Skill?
     @State private var skillsPendingDeletion: [Skill] = []
+    @State private var pendingCopy: PendingCopy?
+
+    /// A copy waiting on the user, because the target agent already has
+    /// skills with these folder names.
+    private struct PendingCopy: Identifiable {
+        let id = UUID()
+        var target: AgentKind
+        var skills: [Skill]
+        var conflicts: [String]
+    }
     @State private var actionError: String?
 
     var body: some View {
@@ -96,6 +106,21 @@ struct SkillListView: View {
         } message: {
             Text("The skill folder and all of its files will be removed from \(agent.skillsDirectoryRelativePath).")
         }
+        .confirmationDialog(
+            Text("Replace \(pendingCopy?.conflicts.count ?? 0) skills in \(pendingCopy?.target.displayName ?? "")?"),
+            isPresented: Binding(
+                get: { pendingCopy != nil },
+                set: { if !$0 { pendingCopy = nil } }
+            ),
+            presenting: pendingCopy
+        ) { copy in
+            Button("Replace", role: .destructive) {
+                performCopy(copy.skills, to: copy.target)
+                pendingCopy = nil
+            }
+        } message: { copy in
+            Text("\(copy.conflicts.joined(separator: ", ")) already exist there. The existing folders are removed first.")
+        }
         .alert(
             "Error",
             isPresented: Binding(
@@ -159,6 +184,7 @@ struct SkillListView: View {
             .labelStyle(.iconOnly)
             .disabled(selectedSkillIDs.isEmpty)
             .help(selectedSkillIDs.isEmpty ? Text("Select a skill to delete it") : Text("Delete the selected skills"))
+            copyMenu
             Spacer()
             Text("\(skillCount) skills")
                 .font(.caption)
@@ -166,6 +192,45 @@ struct SkillListView: View {
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 6)
+    }
+
+    /// Copies the selection into another agent's skills folder.
+    private var copyMenu: some View {
+        Menu {
+            ForEach(AgentKind.allCases.filter { $0 != agent }) { target in
+                Button(target.displayName) {
+                    copy(to: target)
+                }
+            }
+        } label: {
+            Label("Copy to Another Agent", systemImage: "document.on.document")
+        }
+        .menuStyle(.borderlessButton)
+        .menuIndicator(.hidden)
+        .labelStyle(.iconOnly)
+        .fixedSize()
+        .disabled(selectedSkillIDs.isEmpty)
+        .help(selectedSkillIDs.isEmpty ? Text("Select a skill to copy it") : Text("Copy the selected skills to another agent"))
+    }
+
+    /// Copies straight away unless the target already has a skill folder of
+    /// the same name, which is worth asking about before replacing it.
+    private func copy(to target: AgentKind) {
+        let selected = skills(withIDs: selectedSkillIDs)
+        let conflicts = model.conflictingSkillNames(selected, in: target)
+        guard !conflicts.isEmpty else {
+            performCopy(selected, to: target)
+            return
+        }
+        pendingCopy = PendingCopy(target: target, skills: selected, conflicts: conflicts)
+    }
+
+    private func performCopy(_ skills: [Skill], to target: AgentKind) {
+        do {
+            try model.copy(skills, to: target)
+        } catch {
+            actionError = error.localizedDescription
+        }
     }
 
     private var deletionTitle: Text {

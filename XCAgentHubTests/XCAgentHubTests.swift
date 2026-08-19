@@ -578,6 +578,52 @@ struct SkillFrontmatterParseTests {
     }
 }
 
+@Suite("SkillStore.replaceSkill")
+struct SkillStoreReplaceTests {
+    private func makeSkillFolder(at url: URL, body: String) throws {
+        try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
+        try "---\nname: \(url.lastPathComponent)\n---\n\(body)"
+            .write(to: url.appending(path: "SKILL.md"), atomically: true, encoding: .utf8)
+    }
+
+    @Test func replacesAFolderOfTheSameName() throws {
+        let directory = try makeTemporaryDirectory()
+        defer { try? FileManager.default.removeItem(at: directory) }
+
+        let source = directory.appending(path: "source/shared-skill")
+        try makeSkillFolder(at: source, body: "New body")
+
+        let skillsDirectory = directory.appending(path: "skills")
+        let store = SkillStore(skillsDirectoryURL: skillsDirectory, agent: .codex)
+        // An older copy, with a stray file that must not survive.
+        let existing = skillsDirectory.appending(path: "shared-skill")
+        try makeSkillFolder(at: existing, body: "Old body")
+        try "stale".write(to: existing.appending(path: "NOTES.md"), atomically: true, encoding: .utf8)
+
+        let replaced = try store.replaceSkill(from: source)
+
+        #expect(try String(contentsOf: replaced.skillFileURL, encoding: .utf8).contains("New body"))
+        #expect(!FileManager.default.fileExists(atPath: existing.appending(path: "NOTES.md").path))
+        #expect(try store.list().count == 1)
+    }
+
+    @Test func copiesWhenTheTargetHasNothingByThatName() throws {
+        let directory = try makeTemporaryDirectory()
+        defer { try? FileManager.default.removeItem(at: directory) }
+
+        let source = directory.appending(path: "source/fresh-skill")
+        try makeSkillFolder(at: source, body: "Body")
+
+        let store = SkillStore(
+            skillsDirectoryURL: directory.appending(path: "skills"),
+            agent: .gemini
+        )
+        try store.replaceSkill(from: source)
+
+        #expect(try store.list().map(\.directoryName) == ["fresh-skill"])
+    }
+}
+
 @Suite("ConnectionTester")
 struct ConnectionTesterTests {
     @Test func unreachableServerFails() async {
