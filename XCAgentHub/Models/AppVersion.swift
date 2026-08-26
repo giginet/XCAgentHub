@@ -7,7 +7,7 @@ import Milepost
 /// run.
 enum AppVersion {
     static var name: String {
-        bundleString("CFBundleName") ?? "XCAgentHub"
+        bundleString("CFBundleName") ?? "AgentHub"
     }
 
     static var short: String {

@@ -1040,12 +1040,12 @@
         }
       }
     },
-    "Select the CodingAssistant folder so XCAgentHub can read and update agent configurations." : {
+    "Select the CodingAssistant folder so AgentHub can read and update agent configurations." : {
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "XCAgentHub がエージェントの設定を読み書きできるように、CodingAssistant フォルダを選択してください。"
+            "value" : "AgentHub がエージェントの設定を読み書きできるように、CodingAssistant フォルダを選択してください。"
           }
         }
       }
@@ -1242,12 +1242,12 @@
         }
       }
     },
-    "Welcome to XCAgentHub" : {
+    "Welcome to AgentHub" : {
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "XCAgentHub へようこそ"
+            "value" : "AgentHub へようこそ"
           }
         }
       }
@@ -1272,15 +1272,25 @@
         }
       }
     },
-    "XCAgentHub" : {
+    "AgentHub" : {
       "shouldTranslate" : false
     },
-    "XCAgentHub manages the MCP servers of the coding agents that run inside Xcode. To read and update their configuration files, grant access to the folder below." : {
+    "An independent tool, not affiliated with Apple. Xcode is a trademark of Apple Inc." : {
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "XCAgentHub は、Xcode 内で動作するコーディングエージェントの MCP サーバーを管理します。設定ファイルを読み書きするために、下のフォルダへのアクセスを許可してください。"
+            "value" : "Apple とは無関係の独立したツールです。Xcode は Apple Inc. の商標です。"
+          }
+        }
+      }
+    },
+    "AgentHub manages the MCP servers of the coding agents that run inside Xcode. To read and update their configuration files, grant access to the folder below." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AgentHub は、Xcode 内で動作するコーディングエージェントの MCP サーバーを管理します。設定ファイルを読み書きするために、下のフォルダへのアクセスを許可してください。"
           }
         }
       }

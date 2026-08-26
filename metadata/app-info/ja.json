@@ -1,5 +1,5 @@
 {
-  "name": "XCAgentHub",
-  "subtitle": "Xcode のエージェント設定を管理",
+  "name": "AgentHub for Xcode",
+  "subtitle": "エージェントの設定を管理する非公式ツール",
   "privacyPolicyUrl": "https://github.com/giginet/XCAgentHub/blob/main/PRIVACY.md"
 }

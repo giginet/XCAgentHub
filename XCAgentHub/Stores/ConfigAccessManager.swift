@@ -60,7 +60,7 @@ final class ConfigAccessManager {
         panel.canCreateDirectories = true
         panel.directoryURL = Self.defaultFolderURL
         panel.message = String(
-            localized: "Select the CodingAssistant folder so XCAgentHub can read and update agent configurations."
+            localized: "Select the CodingAssistant folder so AgentHub can read and update agent configurations."
         )
         panel.prompt = String(localized: "Grant Access")
         guard panel.runModal() == .OK, let url = panel.url else { return false }

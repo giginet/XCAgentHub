@@ -16,7 +16,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "000000000000000100000000"
-               BuildableName = "XCAgentHub.app"
+               BuildableName = "AgentHub.app"
                ReferencedContainer = "container:XCAgentHub.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -57,7 +57,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "000000000000000100000000"
-            BuildableName = "XCAgentHub.app"
+            BuildableName = "AgentHub.app"
             ReferencedContainer = "container:XCAgentHub.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -73,7 +73,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "000000000000000100000000"
-            BuildableName = "XCAgentHub.app"
+            BuildableName = "AgentHub.app"
             ReferencedContainer = "container:XCAgentHub.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

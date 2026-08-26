@@ -1,13 +1,13 @@
 # Privacy Policy
 
-**XCAgentHub** · Last updated 19 August 2026
+**AgentHub for Xcode** · Last updated 27 August 2026
 
-XCAgentHub collects nothing. There is no account, no analytics, no telemetry, and no
+AgentHub collects nothing. There is no account, no analytics, no telemetry, and no
 crash reporting. Nothing you do in the app is sent to the developer.
 
 ## What the app reads and writes
 
-XCAgentHub edits files that already exist on your Mac, in the folder you grant it access
+AgentHub edits files that already exist on your Mac, in the folder you grant it access
 to on first launch:
 
 - The configuration file of each coding agent, under
@@ -24,7 +24,7 @@ grant is stored as a security-scoped bookmark in the app's own preferences.
 
 ## Network use
 
-XCAgentHub makes exactly one kind of network request, and only when you ask for it: when
+AgentHub makes exactly one kind of network request, and only when you ask for it: when
 you press **Test Connection** on an HTTP MCP server, the app sends an MCP `initialize`
 request to the URL you entered in that server's settings, and shows you the name the
 server answers with.
@@ -38,11 +38,11 @@ The app bundles two open source libraries,
 [swift-toml](https://github.com/mattt/swift-toml) and
 [Milepost](https://github.com/giginet/Milepost). Neither performs any networking or data
 collection at runtime. Their licenses are shown in the app under
-**XCAgentHub → Open Source Licenses**.
+**AgentHub → Open Source Licenses**.
 
 ## Children
 
-XCAgentHub is a developer utility. It is not directed at children and collects no
+AgentHub is a developer utility. It is not directed at children and collects no
 personal information from anyone.
 
 ## Changes

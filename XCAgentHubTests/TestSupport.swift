@@ -1,5 +1,5 @@
 import Foundation
-@testable import XCAgentHub
+@testable import AgentHub
 
 /// Creates an isolated temporary directory for one test.
 func makeTemporaryDirectory() throws -> URL {

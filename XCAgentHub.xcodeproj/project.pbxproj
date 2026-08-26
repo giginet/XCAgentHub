@@ -23,7 +23,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		000000000000000000000120 /* XCAgentHub.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XCAgentHub.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		000000000000000000000120 /* AgentHub.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AgentHub.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		07089A2A30343D72008911A0 /* XCAgentHubTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = XCAgentHubTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -69,7 +69,7 @@
 		000000000000000000000020 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				000000000000000000000120 /* XCAgentHub.app */,
+				000000000000000000000120 /* AgentHub.app */,
 				07089A2A30343D72008911A0 /* XCAgentHubTests.xctest */,
 			);
 			name = Products;
@@ -100,7 +100,7 @@
 				B40CD8EAF62FC9A88CA6D535 /* Milepost */,
 			);
 			productName = MyApp;
-			productReference = 000000000000000000000120 /* XCAgentHub.app */;
+			productReference = 000000000000000000000120 /* AgentHub.app */;
 			productType = "com.apple.product-type.application";
 		};
 		07089A2930343D72008911A0 /* XCAgentHubTests */ = {
@@ -368,7 +368,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = me.giginet.XCAgentHub;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = AgentHub;
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -411,7 +411,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = me.giginet.XCAgentHub;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = AgentHub;
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -447,7 +447,7 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/XCAgentHub.app/Contents/MacOS/XCAgentHub";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AgentHub.app/Contents/MacOS/AgentHub";
 				XROS_DEPLOYMENT_TARGET = 27.0;
 			};
 			name = Debug;
@@ -474,7 +474,7 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/XCAgentHub.app/Contents/MacOS/XCAgentHub";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AgentHub.app/Contents/MacOS/AgentHub";
 				XROS_DEPLOYMENT_TARGET = 27.0;
 			};
 			name = Release;

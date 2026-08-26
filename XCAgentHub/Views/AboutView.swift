@@ -20,6 +20,15 @@ struct AboutView: View {
                     // more room than English.
                     .fixedSize(horizontal: false, vertical: true)
                     .frame(maxWidth: 280)
+                // Said in the app itself, not only on the store page: this is
+                // an independent tool, and Xcode is Apple's.
+                Text("An independent tool, not affiliated with Apple. Xcode is a trademark of Apple Inc.")
+                    .font(.caption2)
+                    .foregroundStyle(.tertiary)
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .frame(maxWidth: 280)
+                    .padding(.top, 4)
             }
 
             Divider()

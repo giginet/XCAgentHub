@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="screenshots/icon.png" width="128" alt="XCAgentHub app icon">
+  <img src="screenshots/icon.png" width="128" alt="AgentHub app icon">
 </p>
 
-# XCAgentHub
+# AgentHub for Xcode
 
 [![macOS](https://img.shields.io/badge/macOS-26%2B-white?logo=apple&logoColor=white)](https://developer.apple.com/macos/)
 [![Swift](https://img.shields.io/badge/Swift-6.3-orange?logo=swift&logoColor=white)](https://swift.org/)
@@ -13,8 +13,11 @@
 
 A macOS app for managing the MCP servers and skills of the coding agents that run inside Xcode.
 
+AgentHub is an independent project. It is not made by Apple, and is not affiliated with,
+endorsed by, or sponsored by Apple Inc. Xcode is a trademark of Apple Inc.
+
 Xcode keeps each agent's configuration in its own file, in its own format, under
-`~/Library/Developer/Xcode/CodingAssistant`. XCAgentHub puts all three in one window
+`~/Library/Developer/Xcode/CodingAssistant`. AgentHub puts all three in one window
 and writes each file in the format that agent expects.
 
 ![MCP server list](screenshots/1-list-mcp.png)
@@ -49,7 +52,7 @@ asks before replacing it.
 
 ## Skills
 
-A skill is a folder holding a `SKILL.md` with YAML frontmatter. XCAgentHub lists what
+A skill is a folder holding a `SKILL.md` with YAML frontmatter. AgentHub lists what
 each agent has, and creates or edits one through a form rather than a text editor:
 dedicated fields for `name`, `description`, and `allowed-tools`, a key/value table for
 anything else, and the Markdown body underneath.
@@ -68,9 +71,9 @@ another agent, asking first if a folder of the same name is already there.
 
 ## Privacy
 
-XCAgentHub collects nothing — no account, no analytics, no telemetry. See
+AgentHub collects nothing — no account, no analytics, no telemetry. See
 [PRIVACY.md](PRIVACY.md).
 
 ## License
 
-XCAgentHub is released under the Apache License 2.0. See [LICENSE](LICENSE).
+AgentHub is released under the Apache License 2.0. See [LICENSE](LICENSE).

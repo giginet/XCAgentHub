@@ -1,6 +1,6 @@
 import Foundation
 import Testing
-@testable import XCAgentHub
+@testable import AgentHub
 
 @Suite("ConnectionTester")
 struct ConnectionTesterTests {

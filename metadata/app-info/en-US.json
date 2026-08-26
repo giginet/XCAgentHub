@@ -1,5 +1,5 @@
 {
-  "name": "XCAgentHub",
-  "subtitle": "MCP servers for Xcode agents",
+  "name": "AgentHub for Xcode",
+  "subtitle": "MCP servers for coding agents",
   "privacyPolicyUrl": "https://github.com/giginet/XCAgentHub/blob/main/PRIVACY.md"
 }

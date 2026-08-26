@@ -13,7 +13,7 @@ struct SidebarView: View {
                 .tag(agent)
         }
         .listStyle(.sidebar)
-        .navigationTitle("XCAgentHub")
+        .navigationTitle("AgentHub")
         .navigationSplitViewColumnWidth(min: 170, ideal: 190)
     }
 
