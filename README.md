@@ -9,7 +9,16 @@
 [![Xcode](https://img.shields.io/badge/Xcode-26.4%2B-blue?logo=xcode&logoColor=white)](https://developer.apple.com/xcode/)
 [![CI](https://github.com/giginet/XCAgentHub/actions/workflows/test.yml/badge.svg)](https://github.com/giginet/XCAgentHub/actions/workflows/test.yml)
 [![License](https://img.shields.io/badge/License-Apache%202.0-green)](LICENSE)
-[![Release](https://img.shields.io/github/v/release/giginet/XCAgentHub)](https://github.com/giginet/XCAgentHub/releases/latest)
+[![Mac App Store](https://img.shields.io/itunes/v/6802938470?label=Mac%20App%20Store&logo=apple&logoColor=white&color=0D96F6)](https://apps.apple.com/app/id6802938470)
+
+<p align="center">
+  <a href="https://apps.apple.com/app/id6802938470">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://toolbox.marketingtools.apple.com/api/v2/badges/download-on-the-mac-app-store/white/en-us">
+      <img src="https://toolbox.marketingtools.apple.com/api/v2/badges/download-on-the-mac-app-store/black/en-us" alt="Download on the Mac App Store" height="48">
+    </picture>
+  </a>
+</p>
 
 A macOS app for managing the MCP servers and skills of the coding agents that run inside Xcode.
 
