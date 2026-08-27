@@ -142,12 +142,18 @@ struct SkillEditorView: View {
 
 /// Writes a SKILL.md under the temporary directory so the previews below
 /// exercise the real load path instead of an empty editor.
-private func previewSkill(named name: String, content: String) -> Skill {
+private func previewSkill(named name: String, content: String, origin: SkillOrigin = .folder) -> Skill {
     let directory = URL(filePath: NSTemporaryDirectory())
         .appending(path: "XCAgentHubPreviews/\(name)")
     try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
     try? Data(content.utf8).write(to: directory.appending(path: "SKILL.md"))
-    return Skill(directoryName: name, name: name, summary: "", directoryURL: directory)
+    return Skill(
+        directoryName: name,
+        name: name,
+        summary: "",
+        directoryURL: directory,
+        origin: origin
+    )
 }
 
 #Preview("Form") {
@@ -182,6 +188,29 @@ private func previewSkill(named name: String, content: String) -> Skill {
 
         Body text.
         """)
+    )
+    .environment(AgentHubViewModel.preview)
+}
+
+#Preview("Linked") {
+    SkillEditorView(
+        agent: .claudeCode,
+        skill: previewSkill(
+            named: "deckset-authoring",
+            content: """
+            ---
+            name: deckset-authoring
+            description: Write Deckset presentations
+            ---
+
+            Body text.
+            """,
+            origin: .link(
+                destination: ConfigAccessManager.realHomeURL
+                    .appending(path: "dotfiles/skills/deckset-authoring"),
+                isReadable: true
+            )
+        )
     )
     .environment(AgentHubViewModel.preview)
 }

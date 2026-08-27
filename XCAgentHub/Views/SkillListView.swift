@@ -338,16 +338,22 @@ private struct SkillRowView: View {
     let skill: Skill
 
     var body: some View {
-        HStack(spacing: 12) {
+        // Top-aligned, not centred: a linked row carries a third line, and a
+        // centred icon drifts away from the name it belongs to.
+        HStack(alignment: .firstTextBaseline, spacing: 12) {
             Image(systemName: icon)
                 .foregroundStyle(skill.isBrokenLink ? AnyShapeStyle(.orange) : AnyShapeStyle(.tint))
             VStack(alignment: .leading, spacing: 2) {
                 Text(skill.name)
                     .font(.headline)
-                Text(skill.summary.isEmpty ? skill.directoryName : skill.summary)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(2)
+                // A broken link has no frontmatter to read, so this line would
+                // only repeat the name back.
+                if !skill.isBrokenLink {
+                    Text(skill.summary.isEmpty ? skill.directoryName : skill.summary)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(2)
+                }
                 if let destination = skill.linkDestination {
                     linkLine(to: destination)
                 }
