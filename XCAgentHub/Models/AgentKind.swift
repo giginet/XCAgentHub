@@ -8,11 +8,14 @@ enum AgentKind: String, CaseIterable, Identifiable, Sendable {
 
     var id: String { rawValue }
 
+    /// What the agent calls itself today. The enum case and the paths below
+    /// stay `gemini`: that is still the folder Xcode reads, only the product
+    /// was renamed.
     var displayName: String {
         switch self {
         case .claudeCode: return "Claude Code"
         case .codex: return "Codex"
-        case .gemini: return "Gemini"
+        case .gemini: return "Antigravity"
         }
     }
 
