@@ -3,5 +3,6 @@
   "keywords": "MCP,Claude Code,Codex,Antigravity,coding agent,AI,developer tools,skills,config",
   "marketingUrl": "https://github.com/giginet/XCAgentHub",
   "promotionalText": "One window for the MCP servers and skills of every coding agent in Xcode.",
-  "supportUrl": "https://github.com/giginet/XCAgentHub/issues"
+  "supportUrl": "https://github.com/giginet/XCAgentHub/issues",
+  "whatsNew": "Skills can now be installed as a link instead of a copy.\n\n\"Link to Folder…\" leaves the skill folder where it already is — in a dotfiles repo, say — and points the agent at it. Edit it there or in AgentHub and every agent linked to it sees the change. Copying a linked skill to another agent keeps it a link, so the agents share one folder instead of drifting apart. Deleting a linked skill removes only the link.\n\nLinked skills are marked in the list with the folder they point at, and a link whose folder has moved away is shown with a warning rather than quietly disappearing.\n\nThe third agent is now called Antigravity, following Google's rename. Its configuration still lives where it did."
 }

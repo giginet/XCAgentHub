@@ -3,5 +3,6 @@
   "keywords": "MCP,Claude Code,Codex,Antigravity,エージェント,AI,開発ツール,スキル,設定",
   "marketingUrl": "https://github.com/giginet/XCAgentHub",
   "promotionalText": "Xcode のコーディングエージェントの MCP サーバーとスキルを、1つのウィンドウで管理。",
-  "supportUrl": "https://github.com/giginet/XCAgentHub/issues"
+  "supportUrl": "https://github.com/giginet/XCAgentHub/issues",
+  "whatsNew": "スキルを、コピーではなくリンクとして取り込めるようになりました。\n\n「フォルダにリンク…」を選ぶと、スキルフォルダは今ある場所（たとえば dotfiles リポジトリ）に残ったまま、エージェントがそこを参照します。リポジトリ側でも AgentHub 側でも編集でき、リンクしているすべてのエージェントに反映されます。他のエージェントへコピーするときもリンクのまま渡されるため、同じフォルダを共有し続けます。リンクされたスキルを削除しても、消えるのはリンクだけです。\n\nリンクされたスキルは一覧にリンク先が表示されます。リンク先が移動して読めなくなった場合は、黙って消えるのではなく警告付きで残ります。\n\n3つめのエージェントの表記を、Google の名称変更に合わせて Antigravity に変更しました。設定ファイルの場所は変わりません。"
 }
