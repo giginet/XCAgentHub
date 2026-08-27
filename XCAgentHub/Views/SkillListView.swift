@@ -45,7 +45,10 @@ struct SkillListView: View {
                     Text("\(agent.displayName) has no skills in \(agent.skillsDirectoryRelativePath) yet.")
                 } actions: {
                     Button("Add from Folder…") {
-                        importFromPanel()
+                        importFromPanel(mode: .copy)
+                    }
+                    Button("Link to Folder…") {
+                        importFromPanel(mode: .link)
                     }
                     Button("New Skill…") {
                         isCreatingSkill = true
@@ -76,7 +79,10 @@ struct SkillListView: View {
             ToolbarItem {
                 Menu {
                     Button("Add from Folder…") {
-                        importFromPanel()
+                        importFromPanel(mode: .copy)
+                    }
+                    Button("Link to Folder…") {
+                        importFromPanel(mode: .link)
                     }
                     Button("New Skill…") {
                         isCreatingSkill = true
@@ -104,7 +110,7 @@ struct SkillListView: View {
                 deletePendingSkills()
             }
         } message: {
-            Text("The skill folder and all of its files will be removed from \(agent.skillsDirectoryRelativePath).")
+            deletionMessage
         }
         .confirmationDialog(
             Text("Replace \(pendingCopy?.conflicts.count ?? 0) skills in \(pendingCopy?.target.displayName ?? "")?"),
@@ -149,8 +155,8 @@ struct SkillListView: View {
             .contextMenu(forSelectionType: Skill.ID.self) { ids in
                 contextMenu(for: ids)
             } primaryAction: { ids in
-                if let id = ids.first {
-                    editingSkill = skill(withID: id)
+                if let id = ids.first, let skill = skill(withID: id), !skill.isBrokenLink {
+                    editingSkill = skill
                 }
             }
 
@@ -161,9 +167,15 @@ struct SkillListView: View {
 
     @ViewBuilder
     private func contextMenu(for ids: Set<Skill.ID>) -> some View {
-        if let id = ids.first {
+        if let id = ids.first, let skill = skill(withID: id) {
             Button("Edit…") {
-                editingSkill = skill(withID: id)
+                editingSkill = skill
+            }
+            .disabled(skill.isBrokenLink)
+            if let destination = skill.linkDestination {
+                Button("Reveal Original in Finder") {
+                    FinderReveal.show(destination)
+                }
             }
         }
         if !ids.isEmpty {
@@ -240,6 +252,19 @@ struct SkillListView: View {
         return Text("Delete \(skillsPendingDeletion.count) skills?")
     }
 
+    /// Deleting a link removes only the link, so promising that the files go
+    /// away would be a lie for exactly the skills the user cares most about.
+    private var deletionMessage: Text {
+        let linked = skillsPendingDeletion.filter { $0.linkDestination != nil }.count
+        if linked == 0 {
+            return Text("The skill folder and all of its files will be removed from \(agent.skillsDirectoryRelativePath).")
+        }
+        if linked == skillsPendingDeletion.count {
+            return Text("Only the link in \(agent.skillsDirectoryRelativePath) is removed. The folder it points to is left alone.")
+        }
+        return Text("Copied skills are removed from \(agent.skillsDirectoryRelativePath) with all of their files. For linked skills only the link is removed.")
+    }
+
     /// Deletes each pending skill, keeping the first failure to show.
     private func deletePendingSkills() {
         for skill in skillsPendingDeletion {
@@ -261,9 +286,10 @@ struct SkillListView: View {
         model.skills(for: agent).filter { ids.contains($0.id) }
     }
 
-    /// Lets the user pick a folder containing SKILL.md and copies it into
-    /// the agent's skills folder.
-    private func importFromPanel() {
+    /// Lets the user pick a folder containing SKILL.md and installs it into
+    /// the agent's skills folder, either as a copy or as a link to where it
+    /// already lives.
+    private func importFromPanel(mode: ImportMode) {
         let panel = NSOpenPanel()
         panel.canChooseFiles = false
         panel.canChooseDirectories = true
@@ -271,38 +297,92 @@ struct SkillListView: View {
         // Skills usually live under dot-directories such as ~/.claude/skills,
         // so start with hidden files visible.
         panel.showsHiddenFiles = true
-        panel.message = String(
-            localized: "Select a skill folder that contains SKILL.md. The folder will be copied into \(agent.skillsDirectoryRelativePath)."
-        )
-        panel.prompt = String(localized: "Import")
+        panel.message = switch mode {
+        case .copy:
+            String(
+                localized: "Select a skill folder that contains SKILL.md. The folder will be copied into \(agent.skillsDirectoryRelativePath)."
+            )
+        case .link:
+            String(
+                localized: "Select a skill folder that contains SKILL.md. It stays where it is and \(agent.skillsDirectoryRelativePath) gets a link to it, so editing the skill here edits that folder."
+            )
+        }
+        panel.prompt = switch mode {
+        case .copy: String(localized: "Import")
+        case .link: String(localized: "Link")
+        }
         guard panel.runModal() == .OK, let url = panel.url else { return }
         do {
-            try model.importSkill(from: url, for: agent)
+            switch mode {
+            case .copy:
+                try model.importSkill(from: url, for: agent)
+            case .link:
+                try model.linkSkill(to: url, for: agent)
+            }
         } catch {
             actionError = error.localizedDescription
         }
     }
 }
 
-/// A single row: skill name, description, and folder name.
+/// How a picked folder gets installed.
+private enum ImportMode {
+    case copy
+    case link
+}
+
+/// A single row: skill name, description, and — for a linked skill — the
+/// folder it points at. That last line is not decoration: editing a linked
+/// skill writes into that folder, so the row says where the writes land.
 private struct SkillRowView: View {
     let skill: Skill
 
     var body: some View {
-        HStack(spacing: 12) {
-            Image(systemName: "text.book.closed")
-                .foregroundStyle(.tint)
+        // Top-aligned, not centred: a linked row carries a third line, and a
+        // centred icon drifts away from the name it belongs to.
+        HStack(alignment: .firstTextBaseline, spacing: 12) {
+            Image(systemName: icon)
+                .foregroundStyle(skill.isBrokenLink ? AnyShapeStyle(.orange) : AnyShapeStyle(.tint))
             VStack(alignment: .leading, spacing: 2) {
                 Text(skill.name)
                     .font(.headline)
-                Text(skill.summary.isEmpty ? skill.directoryName : skill.summary)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(2)
+                // A broken link has no frontmatter to read, so this line would
+                // only repeat the name back.
+                if !skill.isBrokenLink {
+                    Text(skill.summary.isEmpty ? skill.directoryName : skill.summary)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(2)
+                }
+                if let destination = skill.linkDestination {
+                    linkLine(to: destination)
+                }
             }
             Spacer()
         }
         .padding(.vertical, 4)
+    }
+
+    private var icon: String {
+        if skill.isBrokenLink { return "questionmark.folder" }
+        return skill.linkDestination == nil ? "text.book.closed" : "link"
+    }
+
+    private func linkLine(to destination: URL) -> some View {
+        let path = ConfigAccessManager.abbreviatingHome(destination.path)
+        return Group {
+            if skill.isBrokenLink {
+                Text("Cannot read \(path)")
+                    .foregroundStyle(.orange)
+            } else {
+                Text(path)
+                    .foregroundStyle(.tertiary)
+            }
+        }
+        .font(.caption2)
+        .lineLimit(1)
+        .truncationMode(.middle)
+        .help(destination.path)
     }
 }
 

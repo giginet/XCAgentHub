@@ -74,9 +74,16 @@ instead, so nothing is silently rewritten.
 
 ![Editing a skill](screenshots/4-edit-skill.png)
 
-**Add from Folder…** copies a skill folder in, following symlinks so the imported copy
-is made of real files. The copy button in the bottom bar sends the selected skills to
-another agent, asking first if a folder of the same name is already there.
+A skill folder can be installed either way. **Add from Folder…** copies it in, following
+symlinks so the copy is made of real files. **Link to Folder…** leaves the folder where
+it is and points a symlink at it, so a skill kept in a dotfiles repo stays one folder:
+edit it in the repo or in AgentHub and every agent linked to it sees the change. Linked
+skills are marked in the list with the folder they point at, and deleting one removes
+only the link.
+
+The copy button in the bottom bar sends the selected skills to another agent, asking
+first if a folder of the same name is already there. A linked skill is passed along as a
+link, so the agents keep sharing one folder rather than drifting apart.
 
 ## Privacy
 

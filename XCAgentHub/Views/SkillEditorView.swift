@@ -26,6 +26,9 @@ struct SkillEditorView: View {
 
     var body: some View {
         VStack(spacing: 0) {
+            if let destination = skill.linkDestination {
+                linkBanner(to: destination)
+            }
             switch mode {
             case .loading:
                 ProgressView()
@@ -66,7 +69,27 @@ struct SkillEditorView: View {
     }
 
     private var footer: Text {
-        Text("Stored in \(agent.skillsDirectoryRelativePath)/\(skill.directoryName)/SKILL.md. The name here is the frontmatter; the folder keeps its own name.")
+        if let destination = skill.linkDestination {
+            return Text("Linked to \(ConfigAccessManager.abbreviatingHome(destination.path)). The name here is the frontmatter; the folder keeps its own name.")
+        }
+        return Text("Stored in \(agent.skillsDirectoryRelativePath)/\(skill.directoryName)/SKILL.md. The name here is the frontmatter; the folder keeps its own name.")
+    }
+
+    /// This skill is a link, so saving does not write into the agent's folder
+    /// — it writes into whatever the user linked, typically a repository they
+    /// keep by hand. Say so before they hit Save, not after.
+    private func linkBanner(to destination: URL) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Label("Linked Skill", systemImage: "link")
+                .font(.headline)
+            Text("Saving writes to \(ConfigAccessManager.abbreviatingHome(destination.path))/SKILL.md, the folder this skill links to. Every agent linked to it sees the change.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(12)
+        .background(.quaternary.opacity(0.5))
     }
 
     private var rawEditor: some View {
@@ -119,12 +142,18 @@ struct SkillEditorView: View {
 
 /// Writes a SKILL.md under the temporary directory so the previews below
 /// exercise the real load path instead of an empty editor.
-private func previewSkill(named name: String, content: String) -> Skill {
+private func previewSkill(named name: String, content: String, origin: SkillOrigin = .folder) -> Skill {
     let directory = URL(filePath: NSTemporaryDirectory())
         .appending(path: "XCAgentHubPreviews/\(name)")
     try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
     try? Data(content.utf8).write(to: directory.appending(path: "SKILL.md"))
-    return Skill(directoryName: name, name: name, summary: "", directoryURL: directory)
+    return Skill(
+        directoryName: name,
+        name: name,
+        summary: "",
+        directoryURL: directory,
+        origin: origin
+    )
 }
 
 #Preview("Form") {
@@ -159,6 +188,29 @@ private func previewSkill(named name: String, content: String) -> Skill {
 
         Body text.
         """)
+    )
+    .environment(AgentHubViewModel.preview)
+}
+
+#Preview("Linked") {
+    SkillEditorView(
+        agent: .claudeCode,
+        skill: previewSkill(
+            named: "deckset-authoring",
+            content: """
+            ---
+            name: deckset-authoring
+            description: Write Deckset presentations
+            ---
+
+            Body text.
+            """,
+            origin: .link(
+                destination: ConfigAccessManager.realHomeURL
+                    .appending(path: "dotfiles/skills/deckset-authoring"),
+                isReadable: true
+            )
+        )
     )
     .environment(AgentHubViewModel.preview)
 }
