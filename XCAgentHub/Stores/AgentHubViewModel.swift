@@ -67,6 +67,26 @@ final class AgentHubViewModel {
                     summary: "Migrate test suites to Swift Testing",
                     directoryURL: URL(filePath: "/tmp/skills/modernize-tests")
                 ),
+                Skill(
+                    directoryName: "deckset-authoring",
+                    name: "deckset-authoring",
+                    summary: "Write Deckset presentations",
+                    directoryURL: URL(filePath: "/tmp/skills/deckset-authoring"),
+                    origin: .link(
+                        destination: URL(filePath: "/Users/example/dotfiles/skills/deckset-authoring"),
+                        isReadable: true
+                    )
+                ),
+                Skill(
+                    directoryName: "moved-skill",
+                    name: "moved-skill",
+                    summary: "",
+                    directoryURL: URL(filePath: "/tmp/skills/moved-skill"),
+                    origin: .link(
+                        destination: URL(filePath: "/Users/example/old/moved-skill"),
+                        isReadable: false
+                    )
+                ),
             ]
         ])
     }
@@ -186,12 +206,22 @@ final class AgentHubViewModel {
     }
 
     /// Copies skill folders into another agent's skills folder, replacing
-    /// any of the same name.
+    /// any of the same name. A linked skill is passed along as a link to the
+    /// same folder, so the agents keep sharing one copy rather than drifting.
     func copy(_ skills: [Skill], to target: AgentKind) throws {
         guard let root = access.rootDirectoryURL else { return }
         let store = target.makeSkillStore(rootDirectory: root)
         for skill in skills {
-            try store.replaceSkill(from: skill.directoryURL)
+            if let destination = skill.linkDestination {
+                let copied = try store.replaceWithLink(to: destination)
+                // Best effort: the link already works for the agent, and the
+                // scope this app is reading through belongs to the original.
+                if let bookmark = try? access.makeLinkBookmark(for: destination) {
+                    access.rememberLink(at: copied.directoryURL, bookmark: bookmark)
+                }
+            } else {
+                try store.replaceSkill(from: skill.directoryURL)
+            }
         }
         reloadSkills(target)
     }
@@ -240,9 +270,21 @@ final class AgentHubViewModel {
         reloadSkills(agent)
     }
 
+    /// Installs a skill as a symlink to where it already lives. The bookmark
+    /// comes first: it is the only part that can fail for sandbox reasons, and
+    /// failing before the link exists keeps the skills folder clean.
+    func linkSkill(to sourceDirectory: URL, for agent: AgentKind) throws {
+        guard let root = access.rootDirectoryURL else { return }
+        let bookmark = try access.makeLinkBookmark(for: sourceDirectory)
+        let skill = try agent.makeSkillStore(rootDirectory: root).linkSkill(to: sourceDirectory)
+        access.rememberLink(at: skill.directoryURL, bookmark: bookmark)
+        reloadSkills(agent)
+    }
+
     func deleteSkill(_ skill: Skill, for agent: AgentKind) throws {
         guard let root = access.rootDirectoryURL else { return }
         try agent.makeSkillStore(rootDirectory: root).delete(skill)
+        access.forgetLink(at: skill.directoryURL)
         reloadSkills(agent)
     }
 }

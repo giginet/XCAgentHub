@@ -4,24 +4,15 @@
     "" : {
       "shouldTranslate" : false
     },
-    "“%@” links into %@, which this app cannot read. Import that folder directly instead, or replace the link with a copy." : {
+    "%@ Skills" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "“%1$@” links into %2$@, which this app cannot read. Import that folder directly instead, or replace the link with a copy."
-          }
-        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "「%1$@」は %2$@ へのリンクですが、このアプリからは読み取れません。そのフォルダを直接読み込むか、リンクを実体のコピーに置き換えてください。"
+            "value" : "%@ のスキル"
           }
         }
       }
-    },
-    "/usr/bin/example" : {
-      "shouldTranslate" : false
     },
     "%@ already exist there. A backup of the file is kept." : {
       "localizations" : {
@@ -65,16 +56,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%1$@ の %2$@ にはまだスキルがありません。"
-          }
-        }
-      }
-    },
-    "%@ Skills" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ のスキル"
           }
         }
       }
@@ -135,6 +116,9 @@
         }
       }
     },
+    "/usr/bin/example" : {
+      "shouldTranslate" : false
+    },
     "A skill named “%@” already exists." : {
       "localizations" : {
         "ja" : {
@@ -165,16 +149,6 @@
         }
       }
     },
-    "Add a new MCP server" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "新しい MCP サーバーを追加します"
-          }
-        }
-      }
-    },
     "Add Argument" : {
       "localizations" : {
         "ja" : {
@@ -191,16 +165,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "項目を追加"
-          }
-        }
-      }
-    },
-    "Add from Folder…" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "フォルダから追加…"
           }
         }
       }
@@ -255,12 +219,45 @@
         }
       }
     },
+    "Add a new MCP server" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新しい MCP サーバーを追加します"
+          }
+        }
+      }
+    },
+    "Add from Folder…" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "フォルダから追加…"
+          }
+        }
+      }
+    },
     "Additional Frontmatter" : {
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "その他のフロントマター"
+          }
+        }
+      }
+    },
+    "AgentHub" : {
+      "shouldTranslate" : false
+    },
+    "AgentHub manages the MCP servers of the coding agents that run inside Xcode. To read and update their configuration files, grant access to the folder below." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AgentHub は、Xcode 内で動作するコーディングエージェントの MCP サーバーを管理します。設定ファイルを読み書きするために、下のフォルダへのアクセスを許可してください。"
           }
         }
       }
@@ -275,8 +272,15 @@
         }
       }
     },
-    "argument" : {
-      "shouldTranslate" : false
+    "An independent tool, not affiliated with Apple. Xcode is a trademark of Apple Inc." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple とは無関係の独立したツールです。Xcode は Apple Inc. の商標です。"
+          }
+        }
+      }
     },
     "Argument" : {
       "localizations" : {
@@ -341,6 +345,16 @@
         }
       }
     },
+    "Cannot read %@" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ を読み取れません"
+          }
+        }
+      }
+    },
     "Choose an agent in the sidebar to manage its MCP servers and skills." : {
       "localizations" : {
         "ja" : {
@@ -377,6 +391,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ に接続しました"
+          }
+        }
+      }
+    },
+    "Copied skills are removed from %@ with all of their files. For linked skills only the link is removed." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "コピーしたスキルは %@ からファイルごと削除されます。リンクしたスキルは、リンクだけが削除されます。"
           }
         }
       }
@@ -447,16 +471,6 @@
         }
       }
     },
-    "Delete “%@”?" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "「%@」を削除しますか？"
-          }
-        }
-      }
-    },
     "Delete %lld servers?" : {
       "localizations" : {
         "ja" : {
@@ -497,6 +511,16 @@
         }
       }
     },
+    "Delete “%@”?" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "「%@」を削除しますか？"
+          }
+        }
+      }
+    },
     "Delete…" : {
       "localizations" : {
         "ja" : {
@@ -516,6 +540,9 @@
           }
         }
       }
+    },
+    "Detail" : {
+      "shouldTranslate" : false
     },
     "Disable this server" : {
       "localizations" : {
@@ -547,22 +574,22 @@
         }
       }
     },
-    "Edit…" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "編集…"
-          }
-        }
-      }
-    },
     "Edited as Markdown" : {
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Markdown として編集"
+          }
+        }
+      }
+    },
+    "Edit…" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "編集…"
           }
         }
       }
@@ -660,9 +687,6 @@
         }
       }
     },
-    "https://example.com/mcp" : {
-      "shouldTranslate" : false
-    },
     "Import" : {
       "localizations" : {
         "ja" : {
@@ -703,6 +727,9 @@
         }
       }
     },
+    "KEY" : {
+      "shouldTranslate" : false
+    },
     "Key" : {
       "localizations" : {
         "ja" : {
@@ -713,18 +740,42 @@
         }
       }
     },
-    "KEY" : {
-      "shouldTranslate" : false
-    },
-    "license" : {
-      "shouldTranslate" : false
-    },
-    "Manage the MCP servers and skills of the coding agents in Xcode." : {
+    "Link" : {
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Xcode のコーディングエージェントの MCP サーバーとスキルを管理します。"
+            "value" : "リンク"
+          }
+        }
+      }
+    },
+    "Link to Folder…" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "フォルダにリンク…"
+          }
+        }
+      }
+    },
+    "Linked Skill" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "リンクされたスキル"
+          }
+        }
+      }
+    },
+    "Linked to %@. The name here is the frontmatter; the folder keeps its own name." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ にリンクしています。ここでの名前は frontmatter のもので、フォルダ名は元のままです。"
           }
         }
       }
@@ -742,11 +793,15 @@
     "MIT" : {
       "shouldTranslate" : false
     },
-    "my-mcp-server" : {
-      "shouldTranslate" : false
-    },
-    "my-skill" : {
-      "shouldTranslate" : false
+    "Manage the MCP servers and skills of the coding agents in Xcode." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xcode のコーディングエージェントの MCP サーバーとスキルを管理します。"
+          }
+        }
+      }
     },
     "Name" : {
       "localizations" : {
@@ -804,6 +859,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "OK"
+          }
+        }
+      }
+    },
+    "Only the link in %@ is removed. The folder it points to is left alone." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ からはリンクだけが削除されます。リンク先のフォルダはそのまま残ります。"
           }
         }
       }
@@ -940,6 +1005,16 @@
         }
       }
     },
+    "Reveal Original in Finder" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "リンク先を Finder で表示"
+          }
+        }
+      }
+    },
     "Revision" : {
       "localizations" : {
         "ja" : {
@@ -956,6 +1031,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "保存"
+          }
+        }
+      }
+    },
+    "Saving writes to %@/SKILL.md, the folder this skill links to. Every agent linked to it sees the change." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保存すると、このスキルのリンク先である %@/SKILL.md が書き換わります。同じフォルダにリンクしているエージェントすべてに反映されます。"
           }
         }
       }
@@ -996,6 +1081,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "削除するサーバーを選択してください"
+          }
+        }
+      }
+    },
+    "Select a skill folder that contains SKILL.md. It stays where it is and %@ gets a link to it, so editing the skill here edits that folder." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SKILL.md を含むスキルフォルダを選択してください。フォルダはその場に残り、%@ にはそこへのリンクが作られます。このアプリで編集すると、元のフォルダが書き換わります。"
           }
         }
       }
@@ -1080,6 +1175,9 @@
         }
       }
     },
+    "Sidebar" : {
+      "shouldTranslate" : false
+    },
     "Skills" : {
       "localizations" : {
         "ja" : {
@@ -1100,9 +1198,6 @@
         }
       }
     },
-    "stdio" : {
-      "shouldTranslate" : false
-    },
     "Stored in %@/%@/SKILL.md. The name here is the frontmatter; the folder keeps its own name." : {
       "localizations" : {
         "en" : {
@@ -1118,6 +1213,9 @@
           }
         }
       }
+    },
+    "Stored in ClaudeAgentConfig/skills/compose-app-icon/SKILL.md" : {
+      "shouldTranslate" : false
     },
     "Test Connection" : {
       "localizations" : {
@@ -1199,16 +1297,6 @@
         }
       }
     },
-    "Unexpected response" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "応答を解釈できません"
-          }
-        }
-      }
-    },
     "URL" : {
       "localizations" : {
         "ja" : {
@@ -1219,8 +1307,15 @@
         }
       }
     },
-    "value" : {
-      "shouldTranslate" : false
+    "Unexpected response" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "応答を解釈できません"
+          }
+        }
+      }
     },
     "Value" : {
       "localizations" : {
@@ -1272,25 +1367,49 @@
         }
       }
     },
-    "AgentHub" : {
+    "argument" : {
       "shouldTranslate" : false
     },
-    "An independent tool, not affiliated with Apple. Xcode is a trademark of Apple Inc." : {
+    "https://example.com/mcp" : {
+      "shouldTranslate" : false
+    },
+    "license" : {
+      "shouldTranslate" : false
+    },
+    "my-mcp-server" : {
+      "shouldTranslate" : false
+    },
+    "my-skill" : {
+      "shouldTranslate" : false
+    },
+    "stdio" : {
+      "shouldTranslate" : false
+    },
+    "value" : {
+      "shouldTranslate" : false
+    },
+    "“%@” is already in this agent's skills folder, so there is nothing to link to." : {
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Apple とは無関係の独立したツールです。Xcode は Apple Inc. の商標です。"
+            "value" : "「%@」はすでにこのエージェントのスキルフォルダにあるため、リンクする必要はありません。"
           }
         }
       }
     },
-    "AgentHub manages the MCP servers of the coding agents that run inside Xcode. To read and update their configuration files, grant access to the folder below." : {
+    "“%@” links into %@, which this app cannot read. Import that folder directly instead, or replace the link with a copy." : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "“%1$@” links into %2$@, which this app cannot read. Import that folder directly instead, or replace the link with a copy."
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "AgentHub は、Xcode 内で動作するコーディングエージェントの MCP サーバーを管理します。設定ファイルを読み書きするために、下のフォルダへのアクセスを許可してください。"
+            "value" : "「%1$@」は %2$@ へのリンクですが、このアプリからは読み取れません。そのフォルダを直接読み込むか、リンクを実体のコピーに置き換えてください。"
           }
         }
       }

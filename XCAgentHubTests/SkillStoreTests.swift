@@ -280,4 +280,167 @@ struct SavingAndDeleting {
             #expect(try store.list().isEmpty)
         }
 }
+
+@Suite("Linking")
+struct Linking {
+        /// Builds a real skill folder outside the skills directory, the way a
+        /// dotfiles repo would hold one.
+        private func makeSource(named name: String, in directory: URL, body: String = "Body") throws -> URL {
+            let source = directory.appending(path: "dotfiles/\(name)")
+            try writeSkillFolder(at: source, body: body)
+            return source
+        }
+
+        @Test func linkPointsAtTheOriginalInsteadOfCopyingIt() throws {
+            let directory = try makeTemporaryDirectory()
+            defer { try? FileManager.default.removeItem(at: directory) }
+            let store = makeSkillStore(in: directory)
+
+            let source = try makeSource(named: "linked-skill", in: directory)
+            let skill = try store.linkSkill(to: source)
+
+            let target = try FileManager.default.destinationOfSymbolicLink(atPath: skill.directoryURL.path)
+            #expect(target == source.standardizedFileURL.path)
+            #expect(skill.linkDestination?.path == source.standardizedFileURL.path)
+            // Read through the link rather than from a second copy.
+            #expect(try store.readContent(of: skill).contains("Body"))
+        }
+
+        @Test func aLinkedSkillListsWithTheOriginalsFrontmatter() throws {
+            let directory = try makeTemporaryDirectory()
+            defer { try? FileManager.default.removeItem(at: directory) }
+            let store = makeSkillStore(in: directory)
+
+            let source = directory.appending(path: "dotfiles/shared")
+            try FileManager.default.createDirectory(at: source, withIntermediateDirectories: true)
+            try "---\nname: shared\ndescription: From the repo\n---\nBody"
+                .write(to: source.appending(path: "SKILL.md"), atomically: true, encoding: .utf8)
+            try store.linkSkill(to: source)
+
+            let listed = try store.list()
+            #expect(listed.map(\.name) == ["shared"])
+            #expect(listed.first?.summary == "From the repo")
+            #expect(listed.first?.linkDestination?.path == source.standardizedFileURL.path)
+            #expect(listed.first?.isBrokenLink == false)
+        }
+
+        @Test func savingThroughALinkRewritesTheOriginal() throws {
+            let directory = try makeTemporaryDirectory()
+            defer { try? FileManager.default.removeItem(at: directory) }
+            let store = makeSkillStore(in: directory)
+
+            let source = try makeSource(named: "editable-skill", in: directory)
+            let skill = try store.linkSkill(to: source)
+            try store.save(content: "---\nname: editable-skill\n---\nRewritten", to: skill)
+
+            #expect(try String(contentsOf: source.appending(path: "SKILL.md"), encoding: .utf8)
+                .contains("Rewritten"))
+            // The link survived the atomic write; it did not become a folder.
+            #expect((try? FileManager.default.destinationOfSymbolicLink(atPath: skill.directoryURL.path)) != nil)
+        }
+
+        @Test func deletingALinkedSkillLeavesTheOriginalAlone() throws {
+            let directory = try makeTemporaryDirectory()
+            defer { try? FileManager.default.removeItem(at: directory) }
+            let store = makeSkillStore(in: directory)
+
+            let source = try makeSource(named: "kept-skill", in: directory)
+            let skill = try store.linkSkill(to: source)
+            try store.delete(skill)
+
+            #expect(try store.list().isEmpty)
+            #expect(FileManager.default.fileExists(atPath: source.appending(path: "SKILL.md").path))
+        }
+
+        @Test func aLinkWhoseTargetIsGoneStaysInTheList() throws {
+            let directory = try makeTemporaryDirectory()
+            defer { try? FileManager.default.removeItem(at: directory) }
+            let store = makeSkillStore(in: directory)
+
+            let source = try makeSource(named: "vanishing-skill", in: directory)
+            try store.linkSkill(to: source)
+            try FileManager.default.removeItem(at: source)
+
+            // Skipping it would read to the user as the skill disappearing,
+            // with the dead link still sitting in the agent's folder.
+            let listed = try store.list()
+            #expect(listed.map(\.directoryName) == ["vanishing-skill"])
+            #expect(listed.first?.isBrokenLink == true)
+        }
+
+        @Test func linkRefusesANameAlreadyTakenByADeadLink() throws {
+            let directory = try makeTemporaryDirectory()
+            defer { try? FileManager.default.removeItem(at: directory) }
+            let store = makeSkillStore(in: directory)
+
+            // fileExists follows links, so a dead one reads as an empty slot.
+            try FileManager.default.createDirectory(
+                at: store.skillsDirectoryURL, withIntermediateDirectories: true)
+            try FileManager.default.createSymbolicLink(
+                atPath: store.skillsDirectoryURL.appending(path: "taken").path,
+                withDestinationPath: "/nowhere/taken"
+            )
+
+            let source = try makeSource(named: "taken", in: directory)
+            #expect(throws: SkillStoreError.self) {
+                try store.linkSkill(to: source)
+            }
+        }
+
+        @Test func linkRefusesAFolderWithoutASkillFile() throws {
+            let directory = try makeTemporaryDirectory()
+            defer { try? FileManager.default.removeItem(at: directory) }
+            let store = makeSkillStore(in: directory)
+
+            let empty = directory.appending(path: "dotfiles/empty")
+            try FileManager.default.createDirectory(at: empty, withIntermediateDirectories: true)
+            #expect(throws: SkillStoreError.self) {
+                try store.linkSkill(to: empty)
+            }
+            #expect(try store.list().isEmpty)
+        }
+
+        @Test func linkRefusesAFolderAlreadyInTheSkillsDirectory() throws {
+            let directory = try makeTemporaryDirectory()
+            defer { try? FileManager.default.removeItem(at: directory) }
+            let store = makeSkillStore(in: directory)
+
+            let existing = store.skillsDirectoryURL.appending(path: "already-here")
+            try writeSkillFolder(at: existing, body: "Body")
+
+            var thrown: SkillStoreError?
+            #expect(throws: SkillStoreError.self) {
+                do {
+                    try store.linkSkill(to: existing)
+                } catch let error as SkillStoreError {
+                    thrown = error
+                    throw error
+                }
+            }
+            guard case .cannotLinkManagedFolder(let name) = thrown else {
+                Issue.record("expected cannotLinkManagedFolder, got \(String(describing: thrown))")
+                return
+            }
+            #expect(name == "already-here")
+        }
+
+        @Test func replacingWithALinkKeepsTheOtherAgentPointedAtTheSameFolder() throws {
+            let directory = try makeTemporaryDirectory()
+            defer { try? FileManager.default.removeItem(at: directory) }
+
+            let source = try makeSource(named: "shared-skill", in: directory)
+            let target = SkillStore(
+                skillsDirectoryURL: directory.appending(path: "codex-skills"),
+                agent: .codex
+            )
+            // A copied skill of the same name is already there.
+            try writeSkillFolder(at: target.skillsDirectoryURL.appending(path: "shared-skill"), body: "Old")
+
+            let linked = try target.replaceWithLink(to: source)
+
+            #expect(try FileManager.default.destinationOfSymbolicLink(atPath: linked.directoryURL.path)
+                == source.standardizedFileURL.path)
+            #expect(try target.list().map(\.directoryName) == ["shared-skill"])
+        }
+}
 }

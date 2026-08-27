@@ -26,6 +26,9 @@ struct SkillEditorView: View {
 
     var body: some View {
         VStack(spacing: 0) {
+            if let destination = skill.linkDestination {
+                linkBanner(to: destination)
+            }
             switch mode {
             case .loading:
                 ProgressView()
@@ -66,7 +69,27 @@ struct SkillEditorView: View {
     }
 
     private var footer: Text {
-        Text("Stored in \(agent.skillsDirectoryRelativePath)/\(skill.directoryName)/SKILL.md. The name here is the frontmatter; the folder keeps its own name.")
+        if let destination = skill.linkDestination {
+            return Text("Linked to \(ConfigAccessManager.abbreviatingHome(destination.path)). The name here is the frontmatter; the folder keeps its own name.")
+        }
+        return Text("Stored in \(agent.skillsDirectoryRelativePath)/\(skill.directoryName)/SKILL.md. The name here is the frontmatter; the folder keeps its own name.")
+    }
+
+    /// This skill is a link, so saving does not write into the agent's folder
+    /// — it writes into whatever the user linked, typically a repository they
+    /// keep by hand. Say so before they hit Save, not after.
+    private func linkBanner(to destination: URL) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Label("Linked Skill", systemImage: "link")
+                .font(.headline)
+            Text("Saving writes to \(ConfigAccessManager.abbreviatingHome(destination.path))/SKILL.md, the folder this skill links to. Every agent linked to it sees the change.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(12)
+        .background(.quaternary.opacity(0.5))
     }
 
     private var rawEditor: some View {

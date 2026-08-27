@@ -8,24 +8,45 @@ import Observation
 @Observable
 final class ConfigAccessManager {
     private static let bookmarkDefaultsKey = "CodingAssistantFolderBookmark"
+    private static let linkBookmarksDefaultsKey = "LinkedSkillFolderBookmarks"
 
     private(set) var rootDirectoryURL: URL?
 
+    /// Security-scoped bookmarks for folders linked into an agent's skills
+    /// directory, keyed by the path of the symlink pointing at them. A link
+    /// leaves the granted root behind, so without one of these the app loses
+    /// sight of the skill the moment it relaunches.
+    private var linkBookmarks: [String: Data] = [:]
+
     init() {
         restoreFromBookmark()
+        restoreLinkBookmarks()
     }
 
-    /// The real (non-container) location of Xcode's CodingAssistant folder,
-    /// used as the open panel's starting directory. The sandboxed home APIs
-    /// return the app container, so the home directory comes from passwd.
-    static var defaultFolderURL: URL {
+    /// The user's real home directory. The sandboxed home APIs return the app
+    /// container, so it comes from passwd instead.
+    static var realHomeURL: URL {
         let home: String
         if let passwd = getpwuid(getuid()), let dir = passwd.pointee.pw_dir {
             home = String(cString: dir)
         } else {
             home = NSHomeDirectory()
         }
-        return URL(filePath: home).appending(path: "Library/Developer/Xcode/CodingAssistant")
+        return URL(filePath: home)
+    }
+
+    /// The real (non-container) location of Xcode's CodingAssistant folder,
+    /// used as the open panel's starting directory.
+    static var defaultFolderURL: URL {
+        realHomeURL.appending(path: "Library/Developer/Xcode/CodingAssistant")
+    }
+
+    /// A path with the real home folder shown as `~`, for display. Paths to
+    /// linked folders are long and the interesting part is the tail.
+    static func abbreviatingHome(_ path: String) -> String {
+        let home = realHomeURL.path
+        guard path == home || path.hasPrefix(home + "/") else { return path }
+        return "~" + path.dropFirst(home.count)
     }
 
     private func restoreFromBookmark() {
@@ -47,6 +68,69 @@ final class ConfigAccessManager {
             UserDefaults.standard.set(refreshed, forKey: Self.bookmarkDefaultsKey)
         }
         rootDirectoryURL = url
+    }
+
+    // MARK: - Linked skill folders
+
+    /// Bookmarks a folder about to be linked into a skills directory. Call it
+    /// while the open panel's grant is still live — that is the only moment
+    /// the folder is reachable — and before creating the link, so a failure
+    /// here leaves nothing behind on disk.
+    func makeLinkBookmark(for target: URL) throws -> Data {
+        try target.bookmarkData(options: .withSecurityScope)
+    }
+
+    func rememberLink(at linkURL: URL, bookmark: Data) {
+        linkBookmarks[linkURL.standardizedFileURL.path] = bookmark
+        persistLinkBookmarks()
+    }
+
+    func forgetLink(at linkURL: URL) {
+        guard linkBookmarks.removeValue(forKey: linkURL.standardizedFileURL.path) != nil else { return }
+        persistLinkBookmarks()
+    }
+
+    /// Reopens every linked folder from its bookmark. Like the root grant,
+    /// the scope is started and held for the lifetime of the process.
+    private func restoreLinkBookmarks() {
+        guard
+            let stored = UserDefaults.standard.dictionary(forKey: Self.linkBookmarksDefaultsKey)
+                as? [String: Data]
+        else { return }
+
+        var surviving: [String: Data] = [:]
+        for (path, data) in stored {
+            var isStale = false
+            guard
+                let url = try? URL(
+                    resolvingBookmarkData: data,
+                    options: .withSecurityScope,
+                    relativeTo: nil,
+                    bookmarkDataIsStale: &isStale
+                ),
+                url.startAccessingSecurityScopedResource()
+            else {
+                // The folder moved or the grant lapsed. Drop the bookmark; the
+                // link itself stays on disk and is listed as broken, which is
+                // what the user needs to see to fix it.
+                continue
+            }
+            surviving[path] = isStale
+                ? ((try? url.bookmarkData(options: .withSecurityScope)) ?? data)
+                : data
+        }
+        linkBookmarks = surviving
+        if surviving.count != stored.count {
+            persistLinkBookmarks()
+        }
+    }
+
+    private func persistLinkBookmarks() {
+        if linkBookmarks.isEmpty {
+            UserDefaults.standard.removeObject(forKey: Self.linkBookmarksDefaultsKey)
+        } else {
+            UserDefaults.standard.set(linkBookmarks, forKey: Self.linkBookmarksDefaultsKey)
+        }
     }
 
     /// Presents an open panel so the user can grant access to the folder.

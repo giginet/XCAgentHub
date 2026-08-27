@@ -5,6 +5,7 @@ enum SkillStoreError: LocalizedError {
     case skillAlreadyExists(String)
     case notASkillDirectory(String)
     case unreadableLinkTarget(name: String, targetDirectory: String)
+    case cannotLinkManagedFolder(String)
 
     var errorDescription: String? {
         switch self {
@@ -16,6 +17,8 @@ enum SkillStoreError: LocalizedError {
             return String(localized: "The folder \u{201C}\(name)\u{201D} does not contain a SKILL.md file.")
         case .unreadableLinkTarget(let name, let targetDirectory):
             return String(localized: "\u{201C}\(name)\u{201D} links into \(targetDirectory), which this app cannot read. Import that folder directly instead, or replace the link with a copy.")
+        case .cannotLinkManagedFolder(let name):
+            return String(localized: "\u{201C}\(name)\u{201D} is already in this agent's skills folder, so there is nothing to link to.")
         }
     }
 }
@@ -30,17 +33,49 @@ struct SkillStore {
 
     /// All skills, sorted by name. Hidden entries (e.g. Codex's `.system`)
     /// and directories without a SKILL.md are skipped.
+    ///
+    /// A symlink whose target cannot be followed is kept rather than skipped.
+    /// `.isDirectoryKey` resolves the link, so such an entry would otherwise
+    /// fail the directory test and vanish from the list — leaving the user
+    /// with a skill that disappeared and no way to clean it up from here.
     func list() throws -> [Skill] {
         guard FileManager.default.fileExists(atPath: skillsDirectoryURL.path) else { return [] }
         let contents = try FileManager.default.contentsOfDirectory(
             at: skillsDirectoryURL,
-            includingPropertiesForKeys: [.isDirectoryKey],
+            includingPropertiesForKeys: nil,
             options: .skipsHiddenFiles
         )
         var skills: [Skill] = []
         for url in contents {
-            guard (try? url.resourceValues(forKeys: [.isDirectoryKey]).isDirectory) == true else { continue }
-            let skill = makeSkill(directoryURL: url)
+            // `fileExists` follows the link, which is what decides whether
+            // there is a skill to read. The `.isDirectoryKey` that
+            // `contentsOfDirectory` prefetches comes from the enumeration and
+            // does not follow links, so it calls every symlink here a
+            // non-directory.
+            var isDirectory: ObjCBool = false
+            let resolves = FileManager.default.fileExists(atPath: url.path, isDirectory: &isDirectory)
+            let destination = Self.linkDestination(of: url)
+
+            guard resolves, isDirectory.boolValue else {
+                if let destination {
+                    skills.append(
+                        Skill(
+                            directoryName: url.lastPathComponent,
+                            name: url.lastPathComponent,
+                            summary: "",
+                            directoryURL: url,
+                            origin: .link(destination: destination, isReadable: false)
+                        )
+                    )
+                }
+                continue
+            }
+            let origin: SkillOrigin = if let destination {
+                .link(destination: destination, isReadable: true)
+            } else {
+                .folder
+            }
+            let skill = makeSkill(directoryURL: url, origin: origin)
             guard FileManager.default.fileExists(atPath: skill.skillFileURL.path) else { continue }
             skills.append(skill)
         }
@@ -99,27 +134,8 @@ struct SkillStore {
     @discardableResult
     func importSkill(from sourceDirectory: URL) throws -> Skill {
         let source = sourceDirectory.resolvingSymlinksInPath()
-        let sourceSkillFile = source.appending(path: "SKILL.md")
-        guard FileManager.default.fileExists(atPath: sourceSkillFile.path) else {
-            // Reading the link itself is allowed even when its target is not,
-            // so say which folder is out of reach rather than claiming the
-            // skill has no SKILL.md.
-            if let target = try? FileManager.default.destinationOfSymbolicLink(atPath: sourceSkillFile.path) {
-                throw SkillStoreError.unreadableLinkTarget(
-                    name: "SKILL.md",
-                    targetDirectory: URL(filePath: target, relativeTo: source)
-                        .standardizedFileURL
-                        .deletingLastPathComponent()
-                        .path
-                )
-            }
-            throw SkillStoreError.notASkillDirectory(sourceDirectory.lastPathComponent)
-        }
-        let destination = skillsDirectoryURL.appending(path: sourceDirectory.lastPathComponent)
-        guard !FileManager.default.fileExists(atPath: destination.path) else {
-            throw SkillStoreError.skillAlreadyExists(sourceDirectory.lastPathComponent)
-        }
-        try FileManager.default.createDirectory(at: skillsDirectoryURL, withIntermediateDirectories: true)
+        try Self.validateSkillFolder(at: source, named: sourceDirectory.lastPathComponent)
+        let destination = try claimDestination(named: sourceDirectory.lastPathComponent)
         do {
             try Self.copyResolvingSymlinks(from: source, to: destination)
         } catch {
@@ -129,6 +145,83 @@ struct SkillStore {
             throw error
         }
         return makeSkill(directoryURL: destination)
+    }
+
+    /// Installs a skill by pointing a symlink at where it already lives,
+    /// instead of copying it. The agent reads through the link at runtime, so
+    /// one folder — typically in a dotfiles repo — can serve the repo and
+    /// every agent at once.
+    ///
+    /// This app is sandboxed and the open panel's grant dies with the process,
+    /// so the caller is responsible for persisting a security-scoped bookmark
+    /// for `sourceDirectory`; without one the link still works for the agent
+    /// but reads as broken here on the next launch.
+    @discardableResult
+    func linkSkill(to sourceDirectory: URL) throws -> Skill {
+        let source = sourceDirectory.standardizedFileURL
+        try Self.validateSkillFolder(
+            at: source.resolvingSymlinksInPath(),
+            named: source.lastPathComponent
+        )
+        guard source.deletingLastPathComponent().standardizedFileURL.path
+            != skillsDirectoryURL.standardizedFileURL.path
+        else {
+            throw SkillStoreError.cannotLinkManagedFolder(source.lastPathComponent)
+        }
+        let destination = try claimDestination(named: source.lastPathComponent)
+        try FileManager.default.createSymbolicLink(at: destination, withDestinationURL: source)
+        return makeSkill(
+            directoryURL: destination,
+            origin: .link(destination: source, isReadable: true)
+        )
+    }
+
+    /// The shared precondition of both import modes: the folder has to hold a
+    /// SKILL.md that this app can actually read.
+    private static func validateSkillFolder(at source: URL, named name: String) throws {
+        let sourceSkillFile = source.appending(path: "SKILL.md")
+        guard !FileManager.default.fileExists(atPath: sourceSkillFile.path) else { return }
+        // Reading the link itself is allowed even when its target is not,
+        // so say which folder is out of reach rather than claiming the
+        // skill has no SKILL.md.
+        if let target = try? FileManager.default.destinationOfSymbolicLink(atPath: sourceSkillFile.path) {
+            throw SkillStoreError.unreadableLinkTarget(
+                name: "SKILL.md",
+                targetDirectory: URL(filePath: target, relativeTo: source)
+                    .standardizedFileURL
+                    .deletingLastPathComponent()
+                    .path
+            )
+        }
+        throw SkillStoreError.notASkillDirectory(name)
+    }
+
+    /// Reserves `skills/<name>` for a new entry, creating the skills folder if
+    /// this is the first one.
+    private func claimDestination(named name: String) throws -> URL {
+        let destination = skillsDirectoryURL.appending(path: name)
+        guard !Self.entryExists(at: destination) else {
+            throw SkillStoreError.skillAlreadyExists(name)
+        }
+        try FileManager.default.createDirectory(at: skillsDirectoryURL, withIntermediateDirectories: true)
+        return destination
+    }
+
+    /// Whether anything at all occupies `url`. `fileExists` follows symlinks,
+    /// so on its own it reports a link whose target is gone as absent — and
+    /// the caller would then try to write over a name that is already taken.
+    private static func entryExists(at url: URL) -> Bool {
+        FileManager.default.fileExists(atPath: url.path)
+            || (try? FileManager.default.destinationOfSymbolicLink(atPath: url.path)) != nil
+    }
+
+    /// Where a symlink points, as an absolute URL. Link text may be relative,
+    /// in which case it resolves against the folder holding the link.
+    private static func linkDestination(of url: URL) -> URL? {
+        guard let target = try? FileManager.default.destinationOfSymbolicLink(atPath: url.path) else {
+            return nil
+        }
+        return URL(filePath: target, relativeTo: url.deletingLastPathComponent()).standardizedFileURL
     }
 
     /// Recursive copy that follows symlinks rather than preserving them.
@@ -169,11 +262,24 @@ struct SkillStore {
     /// copying a skill to another agent that already has it.
     @discardableResult
     func replaceSkill(from sourceDirectory: URL) throws -> Skill {
-        let destination = skillsDirectoryURL.appending(path: sourceDirectory.lastPathComponent)
-        if FileManager.default.fileExists(atPath: destination.path) {
+        try clearDestination(named: sourceDirectory.lastPathComponent)
+        return try importSkill(from: sourceDirectory)
+    }
+
+    /// The link-mode twin of `replaceSkill(from:)`: a linked skill copied to
+    /// another agent stays a link there, so both agents keep reading the one
+    /// folder the user actually maintains.
+    @discardableResult
+    func replaceWithLink(to sourceDirectory: URL) throws -> Skill {
+        try clearDestination(named: sourceDirectory.standardizedFileURL.lastPathComponent)
+        return try linkSkill(to: sourceDirectory)
+    }
+
+    private func clearDestination(named name: String) throws {
+        let destination = skillsDirectoryURL.appending(path: name)
+        if Self.entryExists(at: destination) {
             try FileManager.default.removeItem(at: destination)
         }
-        return try importSkill(from: sourceDirectory)
     }
 
     func delete(_ skill: Skill) throws {
@@ -182,7 +288,7 @@ struct SkillStore {
 
     // MARK: - Helpers
 
-    private func makeSkill(directoryURL: URL) -> Skill {
+    private func makeSkill(directoryURL: URL, origin: SkillOrigin = .folder) -> Skill {
         let skillFileURL = directoryURL.appending(path: "SKILL.md")
         let frontmatter = Self.parseFrontmatter(
             (try? String(contentsOf: skillFileURL, encoding: .utf8)) ?? ""
@@ -191,7 +297,8 @@ struct SkillStore {
             directoryName: directoryURL.lastPathComponent,
             name: frontmatter["name"] ?? directoryURL.lastPathComponent,
             summary: frontmatter["description"] ?? "",
-            directoryURL: directoryURL
+            directoryURL: directoryURL,
+            origin: origin
         )
     }
 
