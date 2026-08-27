@@ -67,7 +67,7 @@ struct SkillCreatorView: View {
         .environment(AgentHubViewModel.preview)
 }
 
-#Preview("Gemini") {
+#Preview("Antigravity") {
     SkillCreatorView(agent: .gemini)
         .environment(AgentHubViewModel.preview)
 }

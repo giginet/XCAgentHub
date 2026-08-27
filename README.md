@@ -37,7 +37,7 @@ and writes each file in the format that agent expects.
 | --- | --- | --- |
 | Claude Code | `ClaudeAgentConfig/.claude.json` | `ClaudeAgentConfig/skills` |
 | Codex | `codex/config.toml` | `codex/skills` |
-| Gemini | `gemini/settings.json` | `gemini/skills` |
+| Antigravity | `gemini/settings.json` | `gemini/skills` |
 
 Pick an agent in the sidebar; the segmented control switches between its MCP servers
 and its skills.
